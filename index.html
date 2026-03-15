@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Let the Beat DROP 🎤</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #fdf6ec 0%, #fce7f3 100%); min-height: 100vh; padding: 16px; }
+.app { max-width: 520px; margin: 0 auto; }
+.header { text-align: center; margin-bottom: 16px; }
+.header h1 { font-size: 24px; font-weight: 900; color: #1f2937; font-family: Georgia, serif; }
+.header p { font-size: 13px; color: #6b7280; margin-top: 4px; }
+.nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.nav button { padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; border: 2px solid #f9a8d4; background: white; color: #6b7280; cursor: pointer; }
+.nav button.active { background: linear-gradient(90deg, #f59e0b, #ec4899); color: white; border-color: transparent; }
+.screen { display: none; }
+.screen.active { display: block; }
+.card { background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); padding: 20px; border: 2px solid #fde68a; margin-bottom: 16px; }
+.card h2 { font-size: 18px; font-weight: 900; color: #1f2937; margin-bottom: 8px; }
+.card .sub { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
+label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 4px; margin-top: 12px; }
+input, textarea { width: 100%; border: 2px solid #fde68a; border-radius: 12px; padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit; }
+input:focus, textarea:focus { border-color: #ec4899; }
+.btn { display: block; width: 100%; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 14px; color: white; border: none; cursor: pointer; margin-top: 12px; text-align: center; }
+.btn-main { background: linear-gradient(90deg, #f59e0b, #ec4899); }
+.btn-yt { background: linear-gradient(90deg, #ff0000, #cc0000); }
+.btn-indigo { background: linear-gradient(90deg, #6366f1, #ec4899); }
+.btn-green { background: #22c55e; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-row { display: flex; gap: 8px; margin-top: 12px; }
+.btn-row .btn { margin-top: 0; }
+.msg { border-radius: 12px; padding: 10px 12px; font-size: 12px; margin-top: 8px; }
+.msg-info { background: #fdf3ff; border: 2px solid #f0abfc; color: #a21caf; font-weight: 700; }
+.msg-success { background: #f0fdf4; border: 2px solid #86efac; color: #15803d; }
+.msg-error { background: #fef2f2; border: 2px solid #fca5a5; color: #dc2626; }
+.msg-warn { background: #fffbeb; border: 2px solid #fde68a; color: #92400e; }
+.playlist-card { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #fde68a; margin-top: 16px; }
+.pl-header { padding: 20px; text-align: center; background: linear-gradient(90deg, #f59e0b, #ec4899); }
+.pl-header h2 { color: white; font-weight: 900; font-size: 20px; font-family: Georgia, serif; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+.pl-header p { color: #fef9c3; font-size: 13px; margin-top: 4px; }
+.pl-body { background: linear-gradient(135deg, #fff9e6 0%, #fff0f5 100%); padding: 16px; }
+.vibe { text-align: center; margin-bottom: 12px; }
+.vibe span { background: #ec4899; color: white; font-size: 13px; font-weight: 700; padding: 4px 16px; border-radius: 9999px; }
+.note-box { padding: 10px; border-radius: 12px; border: 2px dashed #f9a8d4; background: #fff0f8; text-align: center; font-style: italic; font-size: 13px; color: #6b7280; margin-bottom: 12px; }
+.song-list-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; margin-bottom: 8px; }
+.song-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
+.song-item:nth-child(odd) { background: #fff9e6; }
+.song-item:nth-child(even) { background: #fff0f8; }
+.song-num { font-weight: 900; font-size: 16px; min-width: 24px; }
+.song-link { color: #2563eb; text-decoration: none; font-weight: 600; font-size: 13px; }
+.song-link:hover { text-decoration: underline; }
+.anchor-badge { font-size: 11px; color: #f472b6; font-weight: 700; margin-left: 6px; }
+.hearts { text-align: center; padding: 12px; color: #f472b6; font-size: 18px; }
+.pl-actions { padding: 0 0 8px; display: flex; flex-direction: column; gap: 8px; }
+.blocklist-item, .rate-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
+.blocklist-item:nth-child(odd), .rate-item:nth-child(odd) { background: #fff9e6; }
+.blocklist-item:nth-child(even), .rate-item:nth-child(even) { background: #fff0f8; }
+.unblock-btn { font-size: 11px; color: #f87171; font-weight: 700; background: none; border: none; cursor: pointer; white-space: nowrap; }
+.rate-btns { display: flex; gap: 4px; }
+.rate-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #e5e7eb; background: white; cursor: pointer; font-size: 14px; }
+.rate-btn.selected { border-color: #ec4899; background: #fce7f3; }
+.hint { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; color: #92400e; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div style="font-size:40px;margin-bottom:8px">🎸</div>
+    <h1>Let the Beat DROP 🎤</h1>
+    <p>A little love note in music form 💕</p>
+  </div>
+
+  <div class="nav" id="nav"></div>
+
+  <div id="screen-generate" class="screen"></div>
+  <div id="screen-profile" class="screen"></div>
+  <div id="screen-blocklist" class="screen"></div>
+  <div id="screen-setup" class="screen"></div>
+  <div id="screen-rate" class="screen"></div>
+</div>
+
+<script>
+const DEFAULT_PROFILE = {
+  artists: "Bob Dylan, Tom Petty, Blues Traveler, Pearl Jam, Chappell Roan, Garth Brooks, Brooks & Dunn, Dwight Yoakam, The Mavericks, Fleetwood Mac, Alanis Morissette, Green Day, Bob Seger & The Silver Bullet Band, Jimmy Buffett, Jim Croce, Joni Mitchell, Paul Simon, Billy Joel, The Kinks, Old Crow Medicine Show, Bee Gees, ABBA, The Temptations, Frankie Valli & The Four Seasons, Neil Diamond, Matchbox 20, Dr. Dre, Snoop Dogg, Dua Lipa, Sabrina Carpenter, Doja Cat, Johnny Cash, Gary Allan, George Strait, Randy Travis, Go West, Elton John, Cher, Crosby Stills and Nash, The Band, Hootie and the Blowfish, Diamond Rio, BlackHawk, Toby Keith, America, Toto, Cat Stevens, REO Speedwagon, Guns N Roses, Foreigner",
+  favSongs: "Tangled Up in Blue - Bob Dylan, Hook - Blues Traveler, Wagon Wheel - Old Crow Medicine Show, Maria Shut Up and Kiss Me - Willie Nelson, Red Red Wine - Neil Diamond, Daughter - Pearl Jam, Neon Moon - Brooks and Dunn, 3 AM - Matchbox 20, After Midnight - Chappell Roan, The Subway - Chappell Roan, Go to Town - Doja Cat, Cecelia - Simon and Garfunkel, Laid - James, Regulate - Warren G and Nate Dogg, Dre Day - Dr. Dre, Jump Around - House of Pain, Insane in the Brain - Cypress Hill, Silver Spring - Fleetwood Mac, I Cant Dance - Genesis, Heartache Tonight - Eagles, Still the Same - Bob Seger, Daddy Sang Bass - Johnny Cash, Jackson - Johnny Cash and June Carter Cash, Cocaine Blues - Johnny Cash, Airplanes - Gary Allan, Nothing On But the Radio - Gary Allan, Songs About Rain - Gary Allan, See If I Care - Gary Allan, Best I Ever Had - Gary Allan, Her Man - Gary Allan, Forever and Ever Amen - Randy Travis, I Can Still Make Cheyenne - George Strait, King of Wishful Thinking - Go West, Sad Songs Say So Much - Elton John, I Guess Thats Why They Call It the Blues - Elton John, If I Could Turn Back Time - Cher, Southern Cross - Crosby Stills and Nash, Time - Hootie and the Blowfish, Dont Think I Dont Think About It - Darius Rucker, Norma Jean Riley - Diamond Rio, In a Week or Two - Diamond Rio, Ventura Highway - America, Honky Cat - Elton John, Africa - Toto",
+  dislikes: "R&B, jazz, overly soulful music, Bruce Springsteen, P. Diddy, Puff Daddy, Diddy, Sean Combs, Faith Evans, 112. Never suggest Missing You by Faith Evans or Ill Be Missing You by Puff Daddy.",
+  notes: "Jon loves music across virtually every genre and era. Always singing to himself. Lean toward upbeat, singable, anthemic songs. Hip-hop: stick to classic West Coast rap. Deep cuts OK for: Bob Dylan, Chappell Roan, Paul Simon, Johnny Cash, Tom Petty, Fleetwood Mac, Neil Diamond, The Mavericks, Dwight Yoakam, The Band, Cat Stevens. For Crosby Stills and Nash: hits plus Southern Cross (special significance). All others: hits only."
+};
+const DEFAULT_OVERPLAYED = ["Homeward Bound","Take It Easy","Take Me Home Country Roads","Home","The Weight"];
+
+// State
+let state = {
+  screen: "generate",
+  profile: JSON.parse(localStorage.getItem("jon-profile") || "null") || DEFAULT_PROFILE,
+  ratings: JSON.parse(localStorage.getItem("jon-ratings") || "{}"),
+  lastPlaylist: JSON.parse(localStorage.getItem("last-playlist") || "[]"),
+  blocklist: JSON.parse(localStorage.getItem("blocklist") || "null") || DEFAULT_OVERPLAYED,
+  clientId: localStorage.getItem("yt-client-id") || "",
+  apiKey: localStorage.getItem("anthropic-key") || "",
+  accessToken: localStorage.getItem("yt-access-token") || "",
+  songs: [],
+  generated: false,
+  ytResult: null,
+  ytUrl: "",
+};
+
+// Check for OAuth token in URL
+const hash = window.location.hash;
+if (hash && hash.includes("access_token")) {
+  const params = new URLSearchParams(hash.substring(1));
+  const token = params.get("access_token");
+  if (token) {
+    state.accessToken = token;
+    localStorage.setItem("yt-access-token", token);
+    window.history.replaceState(null, "", window.location.pathname);
+  }
+}
+
+function save(key, val) {
+  if (typeof val === "object") localStorage.setItem(key, JSON.stringify(val));
+  else localStorage.setItem(key, val);
+}
+
+function setScreen(s) {
+  state.screen = s;
+  renderNav();
+  document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+  document.getElementById("screen-" + s).classList.add("active");
+}
+
+function renderNav() {
+  const tabs = [
+    {id:"generate", label:"🎶 Create"},
+    {id:"profile", label:"⭐ Profile"},
+    {id:"blocklist", label:"🚫 Blocklist"},
+    {id:"setup", label: state.clientId ? "⚙️ Setup ✓" : "⚙️ Setup"},
+    ...(state.lastPlaylist.length > 0 ? [{id:"rate", label:"📊 Rate"}] : [])
+  ];
+  document.getElementById("nav").innerHTML = tabs.map(t =>
+    `<button class="${state.screen===t.id?'active':''}" onclick="setScreen('${t.id}')">${t.label}</button>`
+  ).join("");
+}
+
+// SETUP SCREEN
+function renderSetup() {
+  document.getElementById("screen-setup").innerHTML = `
+    <div class="card">
+      <h2>⚙️ Setup</h2>
+      <p class="sub">Enter your credentials to power the app.</p>
+      ${state.accessToken ? `<div class="msg msg-success">✓ Signed in to YouTube Music! <button onclick="signOutYT()" style="margin-left:8px;background:none;border:none;color:#dc2626;font-weight:700;cursor:pointer;font-size:12px">Sign out</button></div>` : ""}
+      <label>Anthropic API Key</label>
+      <input type="password" id="inp-apikey" placeholder="sk-ant-..." value="${state.apiKey}">
+      <label>Google OAuth Client ID</label>
+      <input type="password" id="inp-clientid" placeholder="Ends in .googleusercontent.com" value="${state.clientId}">
+      <button class="btn btn-main" onclick="saveSetup()">💾 Save</button>
+      <div class="hint">
+        <strong>Anthropic API Key:</strong> Get from console.anthropic.com → API Keys<br><br>
+        <strong>Google Client ID:</strong> From your downloaded JSON file or Google Cloud Console → Credentials
+      </div>
+    </div>`;
+}
+
+function saveSetup() {
+  state.apiKey = document.getElementById("inp-apikey").value.trim();
+  state.clientId = document.getElementById("inp-clientid").value.trim();
+  save("anthropic-key", state.apiKey);
+  save("yt-client-id", state.clientId);
+  renderNav();
+  renderSetup();
+  alert("Saved!");
+}
+
+function signOutYT() {
+  state.accessToken = "";
+  localStorage.removeItem("yt-access-token");
+  renderSetup();
+}
+
+// PROFILE SCREEN
+function renderProfile() {
+  document.getElementById("screen-profile").innerHTML = `
+    <div class="card">
+      <h2>⭐ Jon's Music Profile</h2>
+      <label>🎸 Favorite Artists</label>
+      <textarea rows="4" id="p-artists">${state.profile.artists}</textarea>
+      <label>💿 All-Time Favorite Songs</label>
+      <textarea rows="4" id="p-favSongs">${state.profile.favSongs}</textarea>
+      <label>🚫 Things He Does Not Like</label>
+      <textarea rows="2" id="p-dislikes">${state.profile.dislikes}</textarea>
+      <label>📝 Anything Else</label>
+      <textarea rows="3" id="p-notes">${state.profile.notes}</textarea>
+      <button class="btn btn-main" onclick="saveProfile()">💾 Save Profile</button>
+    </div>`;
+}
+
+function saveProfile() {
+  state.profile = {
+    artists: document.getElementById("p-artists").value,
+    favSongs: document.getElementById("p-favSongs").value,
+    dislikes: document.getElementById("p-dislikes").value,
+    notes: document.getElementById("p-notes").value,
+  };
+  save("jon-profile", state.profile);
+  alert("Profile saved!");
+}
+
+// BLOCKLIST SCREEN
+function renderBlocklist() {
+  const items = state.blocklist.map((s,i) =>
+    `<div class="blocklist-item"><span style="font-size:13px;color:#374151">${s}</span><button class="unblock-btn" onclick="unblock(${i})">✕ Unblock</button></div>`
+  ).join("");
+  document.getElementById("screen-blocklist").innerHTML = `
+    <div class="card">
+      <h2>🚫 Blocked Songs</h2>
+      <p class="sub">All generated songs auto-added. Unblock when ready for them to return!</p>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input id="bl-input" placeholder="Manually add a song title..." style="flex:1" onkeydown="if(event.key==='Enter')addBlock()">
+        <button class="btn btn-main" onclick="addBlock()" style="width:auto;padding:8px 16px;margin-top:0">Add</button>
+      </div>
+      <div style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase">Blocked (${state.blocklist.length})</span>
+          ${state.blocklist.length > 0 ? `<button onclick="clearBlocklist()" style="font-size:11px;color:#f87171;font-weight:700;background:none;border:none;cursor:pointer">🗑 Clear All</button>` : ""}
+        </div>
+        ${state.blocklist.length === 0 ? `<p style="font-size:12px;color:#9ca3af;font-style:italic">No songs blocked yet.</p>` : items}
+      </div>
+    </div>`;
+}
+
+function addBlock() {
+  const val = document.getElementById("bl-input").value.trim();
+  if (!val) return;
+  state.blocklist = [...new Set([...state.blocklist, val])];
+  save("blocklist", state.blocklist);
+  renderBlocklist();
+}
+
+function unblock(i) {
+  state.blocklist.splice(i, 1);
+  save("blocklist", state.blocklist);
+  renderBlocklist();
+}
+
+function clearBlocklist() {
+  if (confirm("Clear all blocked songs?")) {
+    state.blocklist = [];
+    save("blocklist", state.blocklist);
+    renderBlocklist();
+  }
+}
+
+// RATE SCREEN
+function renderRate() {
+  if (!state.lastPlaylist.length) {
+    document.getElementById("screen-rate").innerHTML = `<div class="card"><p style="text-align:center;color:#6b7280">Generate a playlist first!</p></div>`;
+    return;
+  }
+  const items = state.lastPlaylist.map((song, i) => {
+    const r = state.ratings[song] || "";
+    return `<div class="rate-item">
+      <span style="font-size:12px;color:#374151;flex:1;margin-right:8px">${song}</span>
+      <div class="rate-btns">
+        ${[["❤️","loved"],["👍","liked"],["👎","skip"]].map(([e,v]) =>
+          `<button class="rate-btn ${r===v?'selected':''}" onclick="rateSong('${song.replace(/'/g,"\\'")}','${v}')">${e}</button>`
+        ).join("")}
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("screen-rate").innerHTML = `
+    <div class="card">
+      <h2>📊 Rate Last Playlist</h2>
+      <p class="sub">How did Jon react? Helps future playlists get smarter!</p>
+      ${items}
+      <button class="btn btn-main" onclick="saveRatings()">💾 Save Ratings</button>
+    </div>`;
+}
+
+function rateSong(song, val) {
+  state.ratings[song] = val;
+  renderRate();
+}
+
+function saveRatings() {
+  save("jon-ratings", state.ratings);
+  alert("Ratings saved!");
+}
+
+// GENERATE SCREEN
+function renderGenerate() {
+  document.getElementById("screen-generate").innerHTML = `
+    <div class="card">
+      ${Object.keys(state.ratings).filter(k=>state.ratings[k]==="loved").length > 0 ? `<div class="msg msg-info">✨ Using Jon's profile + ${Object.keys(state.ratings).filter(k=>state.ratings[k]==="loved").length} loved songs!</div>` : ""}
+      <label>🎨 Today's Mood or Theme *</label>
+      <input id="g-mood" placeholder="e.g. Rainy day cozy, Pump-up Friday, Thinking of you...">
+      <label>💌 A little note for Jon (optional)</label>
+      <input id="g-note" placeholder="e.g. Thinking of you today! Hope this brightens your afternoon ♥">
+      <label>🎵 Your Picks (optional — up to 3)</label>
+      <input id="g-a1" placeholder="Song 1 — e.g. Free Bird - Lynyrd Skynyrd" style="margin-bottom:6px">
+      <input id="g-a2" placeholder="Song 2" style="margin-bottom:6px">
+      <input id="g-a3" placeholder="Song 3">
+      <div id="g-error" class="msg msg-error" style="display:none"></div>
+      <button class="btn btn-main" id="g-btn" onclick="generate()">🎶 Generate Playlist</button>
+    </div>
+    <div id="playlist-result"></div>`;
+}
+
+function getRecentSongs() {
+  const history = JSON.parse(localStorage.getItem("playlist-history") || "[]");
+  const fiveDays = 5 * 24 * 60 * 60 * 1000;
+  const recent = [];
+  history.forEach(e => { if (Date.now() - e.timestamp < fiveDays) recent.push(...e.songs); });
+  const unique = [...new Set(recent)];
+  return { full: unique, titles: [...new Set(unique.map(s => s.split(" - ")[0].trim()))] };
+}
+
+function saveToHistory(songs) {
+  const history = JSON.parse(localStorage.getItem("playlist-history") || "[]");
+  history.push({ timestamp: Date.now(), songs });
+  const trimmed = history.filter(e => Date.now() - e.timestamp < 30*24*60*60*1000);
+  localStorage.setItem("playlist-history", JSON.stringify(trimmed));
+}
+
+function hardFilter(songList, recentTitles) {
+  const allBlocked = [...new Set([...DEFAULT_OVERPLAYED, ...state.blocklist, ...recentTitles])].map(t => t.toLowerCase().trim());
+  return songList.filter(s => {
+    const title = s.split(" - ")[0].trim().toLowerCase();
+    return !allBlocked.some(b => title === b);
+  });
+}
+
+async function generate() {
+  const mood = document.getElementById("g-mood").value.trim();
+  const note = document.getElementById("g-note").value.trim();
+  const picked = ["g-a1","g-a2","g-a3"].map(id => document.getElementById(id).value.trim()).filter(Boolean);
+  const errEl = document.getElementById("g-error");
+
+  if (!mood) { errEl.textContent = "Please enter a mood or theme!"; errEl.style.display="block"; return; }
+  if (!state.apiKey) { errEl.textContent = "Please add your Anthropic API key in the Setup tab!"; errEl.style.display="block"; return; }
+  errEl.style.display = "none";
+
+  const btn = document.getElementById("g-btn");
+  btn.textContent = "✨ Building your playlist...";
+  btn.disabled = true;
+
+  const recent = getRecentSongs();
+  const allBlocked = [...new Set([...DEFAULT_OVERPLAYED, ...state.blocklist, ...recent.titles])];
+  const loved = Object.entries(state.ratings).filter(([,v])=>v==="loved").map(([k])=>k);
+  const liked = Object.entries(state.ratings).filter(([,v])=>v==="liked").map(([k])=>k);
+  const skipped = Object.entries(state.ratings).filter(([,v])=>v==="skip").map(([k])=>k);
+
+  const profileSection = [
+    state.profile.artists && "Favorite artists: " + state.profile.artists,
+    state.profile.favSongs && "All-time favorites: " + state.profile.favSongs,
+    state.profile.dislikes && "Dislikes: " + state.profile.dislikes,
+    state.profile.notes && "Notes: " + state.profile.notes,
+  ].filter(Boolean).join("\n");
+
+  const ratingsSection = [
+    loved.length && "Songs he LOVED: " + loved.slice(-15).join(", "),
+    liked.length && "Songs he LIKED: " + liked.slice(-15).join(", "),
+    skipped.length && "Songs he SKIPPED: " + skipped.slice(-15).join(", "),
+  ].filter(Boolean).join("\n");
+
+  const prompt = "You are a music curator making a playlist for Jon.\n\n"
+    + (profileSection ? "JON'S PROFILE:\n" + profileSection + "\n" : "")
+    + (ratingsSection ? "\nPAST RATINGS:\n" + ratingsSection + "\n" : "")
+    + "\nNEVER suggest these songs: " + allBlocked.join(", ") + "\n"
+    + "\nMood/theme: " + mood
+    + (picked.length ? "\nAlready in playlist (do NOT repeat): " + picked.join(", ") : "")
+    + "\n\nSuggest " + (20 - picked.length) + " fresh varied songs. Dig deeper than obvious choices."
+    + "\n\nRespond ONLY with a JSON array: [\"Song - Artist\", ...]. No markdown.";
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": state.apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 1500, messages: [{ role: "user", content: prompt }] })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const text = data.content.map(b => b.text||"").join("");
+    const clean = text.replace(/```json|```/g,"").trim();
+    const suggested = JSON.parse(clean);
+    const filtered = hardFilter(suggested, recent.titles);
+          const allSongs = [...picked, ...filtered].slice(0, 20);
+      // If we got fewer than 20, request more
+      if (allSongs.length < 20) {
+        const needed = 20 - allSongs.length;
+        const extraPrompt = prompt + "\n\nYou previously suggested songs but we need " + needed + " more. Suggest " + needed + " additional different songs.\n\nRespond ONLY with a JSON array: [\"Song - Artist\", ...]. No markdown.";
+        try {
+          const res2 = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-api-key": state.apiKey, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+            body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 800, messages: [{ role: "user", content: extraPrompt }] })
+          });
+          const data2 = await res2.json();
+          const text2 = data2.content.map(b => b.text||"").join("");
+          const match2 = text2.match(/\[[\s\S]*\]/);
+          if (match2) {
+            const extra = JSON.parse(match2[0]);
+            const extraFiltered = hardFilter(extra, recent.titles);
+            allSongs.push(...extraFiltered.slice(0, needed));
+          }
+        } catch(e) {}
+      }
+
+    state.songs = allSongs;
+    state.lastPlaylist = allSongs;
+    state.generated = true;
+    state.ytResult = null;
+    save("last-playlist", allSongs);
+    saveToHistory(allSongs);
+
+    const newTitles = allSongs.map(s => s.split(" - ")[0].trim());
+    state.blocklist = [...new Set([...state.blocklist, ...newTitles])];
+    save("blocklist", state.blocklist);
+
+    renderNav();
+    renderPlaylistCard(mood, note, picked.length);
+  } catch(e) {
+    errEl.textContent = "Error: " + e.message;
+    errEl.style.display = "block";
+  }
+
+  btn.textContent = "🎶 Generate Playlist";
+  btn.disabled = false;
+}
+
+function renderPlaylistCard(mood, note, pickedCount) {
+  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  const songItems = state.songs.map((song, i) => `
+    <div class="song-item">
+      <span class="song-num" style="color:${i<pickedCount?'#ec4899':'#f59e0b'}">${i+1}.</span>
+      <span>
+        <a class="song-link" href="https://music.youtube.com/search?q=${encodeURIComponent(song)}" target="_blank">${song}</a>
+        ${i<pickedCount?'<span class="anchor-badge">★ your pick</span>':''}
+      </span>
+    </div>`).join("");
+
+  document.getElementById("playlist-result").innerHTML = `
+    <div class="playlist-card">
+      <div class="pl-header">
+        <div style="font-size:32px;margin-bottom:4px">🎵</div>
+        <h2>Let the Beat DROP 🎤</h2>
+        <p>${today}</p>
+      </div>
+      <div class="pl-body">
+        <div class="vibe"><span>🎨 Today's Vibe: ${mood}</span></div>
+        ${note ? `<div class="note-box">💌 "${note}"</div>` : ""}
+        <div class="song-list-label">🎶 Your Playlist</div>
+        ${songItems}
+        <div class="hearts">♥ ♪ ♥ ♪ ♥</div>
+        <div class="pl-actions">
+          ${state.clientId ? `
+          <button class="btn btn-yt" id="yt-btn" onclick="handleYouTube('${encodeURIComponent(mood)}','${encodeURIComponent(note||'')}')">
+            ${state.accessToken ? "🎵 Save to YouTube Music" : "🎵 Sign in & Save to YouTube Music"}
+          </button>
+          <div id="yt-result"></div>` : ""}
+          <div class="btn-row">
+            <button class="btn btn-main" id="copy-btn" onclick="copyText('${encodeURIComponent(mood)}','${encodeURIComponent(note||'')}',${pickedCount})">📋 Copy Text</button>
+            <button class="btn btn-indigo" onclick="openMail('${encodeURIComponent(mood)}','${encodeURIComponent(note||'')}',${pickedCount})">📧 Open in Mail</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function buildText(mood, note, pickedCount) {
+  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  const lines = ["🎵 Let the Beat DROP — " + today, "🎨 Today's Vibe: " + mood, note ? '\n💌 "' + note + '"\n' : "", "", "🎶 Your Playlist:"];
+  state.songs.forEach((s,i) => lines.push((i+1) + ". " + s + (i<pickedCount?" ★":"") + "\n   https://music.youtube.com/search?q=" + encodeURIComponent(s)));
+  lines.push("","♥ ♪ ♥ ♪ ♥");
+  return lines.join("\n");
+}
+
+function copyText(moodEnc, noteEnc, pc) {
+  const mood = decodeURIComponent(moodEnc), note = decodeURIComponent(noteEnc);
+  navigator.clipboard.writeText(buildText(mood, note, pc));
+  const btn = document.getElementById("copy-btn");
+  btn.textContent = "✓ Copied!";
+  btn.className = "btn btn-green";
+  setTimeout(() => { btn.textContent = "📋 Copy Text"; btn.className = "btn btn-main"; }, 3000);
+}
+
+function openMail() {
+  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  const subject = encodeURIComponent("🎵 Let the Beat DROP — " + today);
+  const noteEl = document.getElementById("g-note");
+  const note = noteEl ? noteEl.value.trim() : "";
+  const ytUrl = state.ytUrl || "";
+  const bodyText = (note ? note + "\n\n" : "") +
+    (ytUrl ? "▶ Today's Playlist:\n" + ytUrl : "Save to YouTube Music first to get the link!") +
+    "\n\n♥ ♪ ♥ ♪ ♥";
+  window.open("https://mail.google.com/mail/?view=cm&su=" + subject + "&body=" + encodeURIComponent(bodyText), "_blank");
+}
+
+function handleYouTube(moodEnc, noteEnc) {
+  if (!state.accessToken) { signInToYouTube(); return; }
+  createYouTubePlaylist(decodeURIComponent(moodEnc), decodeURIComponent(noteEnc));
+}
+
+function signInToYouTube() {
+  // Save current playlist and mood/note before redirecting
+  localStorage.setItem("pending-yt-save", "true");
+  const redirectUri = window.location.href.split("#")[0].split("?")[0];
+  const authUrl = "https://accounts.google.com/o/oauth2/v2/auth"
+    + "?client_id=" + encodeURIComponent(state.clientId)
+    + "&redirect_uri=" + encodeURIComponent(redirectUri)
+    + "&response_type=token"
+    + "&scope=" + encodeURIComponent("https://www.googleapis.com/auth/youtube");
+  window.location.href = authUrl;
+}
+
+async function createYouTubePlaylist(mood, note) {
+  const btn = document.getElementById("yt-btn");
+  const resultEl = document.getElementById("yt-result");
+  btn.textContent = "⏳ Creating playlist...";
+  btn.disabled = true;
+
+  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  try {
+    const createRes = await fetch("https://www.googleapis.com/youtube/v3/playlists?part=snippet,status", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + state.accessToken, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        snippet: { title: "Let the Beat DROP — " + today + (mood ? " (" + mood + ")" : ""), description: note || "A playlist made with love 💕" },
+        status: { privacyStatus: "unlisted" }
+      })
+    });
+    const playlist = await createRes.json();
+    if (playlist.error) {
+      if (playlist.error.code === 401) { state.accessToken = ""; localStorage.removeItem("yt-access-token"); resultEl.innerHTML = `<div class="msg msg-error">Session expired. Please sign in again.</div>`; btn.textContent = "🎵 Sign in & Save to YouTube Music"; btn.disabled = false; return; }
+      throw new Error(playlist.error.message);
+    }
+    const playlistId = playlist.id;
+    let added = 0;
+    for (const song of state.songs) {
+      try {
+        const sr = await fetch("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + encodeURIComponent(song) + "&type=video&videoCategoryId=10&maxResults=1", { headers: { "Authorization": "Bearer " + state.accessToken } });
+        const sd = await sr.json();
+        const videoId = sd.items?.[0]?.id?.videoId;
+        if (videoId) {
+          await fetch("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet", {
+            method: "POST",
+            headers: { "Authorization": "Bearer " + state.accessToken, "Content-Type": "application/json" },
+            body: JSON.stringify({ snippet: { playlistId, resourceId: { kind: "youtube#video", videoId } } })
+          });
+          added++;
+        }
+      } catch(e) {}
+    }
+    state.ytUrl = "https://music.youtube.com/playlist?list=" + playlistId;
+    resultEl.innerHTML = `<div class="msg msg-success">✓ Playlist created with ${added} songs!<br><a href="${state.ytUrl}" target="_blank" style="color:#2563eb;font-weight:700">▶ Open in YouTube Music</a></div>`;
+    const mailBtn = document.getElementById("mail-btn");
+    if (mailBtn) { 
+      mailBtn.style.opacity = "1";
+      mailBtn.title = "";
+      mailBtn.textContent = "📧 Send via Gmail";
+      mailBtn.onclick = function() { openMail(state.ytUrl); };
+    }
+    btn.textContent = "🎵 Save to YouTube Music";
+    btn.disabled = false;
+  } catch(e) {
+    resultEl.innerHTML = `<div class="msg msg-error">Error: ${e.message}</div>`;
+    btn.textContent = "🎵 Save to YouTube Music";
+    btn.disabled = false;
+  }
+}
+
+// Init
+renderNav();
+renderGenerate();
+renderProfile();
+renderBlocklist();
+renderSetup();
+renderRate();
+setScreen("generate");
+</script>
+</body>
+</html>
