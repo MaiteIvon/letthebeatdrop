@@ -385,8 +385,7 @@ async function generate() {
     const data = await res.json();
     if (data.error) throw new Error(data.error.message);
     const text = data.content.map(b => b.text||"").join("");
-    const clean = text.replace(/```json|```/g,"").trim();
-    const suggested = JSON.parse(clean);
+    const suggested = text.split("\n").map(line => line.replace(/^\d+[\.\)]\s*/, "").trim()).filter(line => line.length > 3);
     const filtered = hardFilter(suggested, recent.titles);
           const allSongs = [...picked, ...filtered].slice(0, 20);
       // If we got fewer than 20, request more
