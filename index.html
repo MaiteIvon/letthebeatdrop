@@ -18,14 +18,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .screen.active { display: block; }
 .card { background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); padding: 20px; border: 2px solid #fde68a; margin-bottom: 16px; }
 .card h2 { font-size: 18px; font-weight: 900; color: #1f2937; margin-bottom: 8px; }
-.card .sub { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
 label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 4px; margin-top: 12px; }
 input, textarea { width: 100%; border: 2px solid #fde68a; border-radius: 12px; padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit; }
 input:focus, textarea:focus { border-color: #ec4899; }
 .btn { display: block; width: 100%; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 14px; color: white; border: none; cursor: pointer; margin-top: 12px; text-align: center; }
 .btn-main { background: linear-gradient(90deg, #f59e0b, #ec4899); }
 .btn-yt { background: linear-gradient(90deg, #ff0000, #cc0000); }
-.btn-indigo { background: linear-gradient(90deg, #6366f1, #ec4899); }
+.btn-gmail { background: linear-gradient(90deg, #6366f1, #ec4899); }
 .btn-green { background: #22c55e; }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .btn-row { display: flex; gap: 8px; margin-top: 12px; }
@@ -34,7 +33,6 @@ input:focus, textarea:focus { border-color: #ec4899; }
 .msg-info { background: #fdf3ff; border: 2px solid #f0abfc; color: #a21caf; font-weight: 700; }
 .msg-success { background: #f0fdf4; border: 2px solid #86efac; color: #15803d; }
 .msg-error { background: #fef2f2; border: 2px solid #fca5a5; color: #dc2626; }
-.msg-warn { background: #fffbeb; border: 2px solid #fde68a; color: #92400e; }
 .playlist-card { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #fde68a; margin-top: 16px; }
 .pl-header { padding: 20px; text-align: center; background: linear-gradient(90deg, #f59e0b, #ec4899); }
 .pl-header h2 { color: white; font-weight: 900; font-size: 20px; font-family: Georgia, serif; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
@@ -52,15 +50,18 @@ input:focus, textarea:focus { border-color: #ec4899; }
 .song-link:hover { text-decoration: underline; }
 .anchor-badge { font-size: 11px; color: #f472b6; font-weight: 700; margin-left: 6px; }
 .hearts { text-align: center; padding: 12px; color: #f472b6; font-size: 18px; }
-.pl-actions { padding: 0 0 8px; display: flex; flex-direction: column; gap: 8px; }
-.blocklist-item, .rate-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
-.blocklist-item:nth-child(odd), .rate-item:nth-child(odd) { background: #fff9e6; }
-.blocklist-item:nth-child(even), .rate-item:nth-child(even) { background: #fff0f8; }
-.unblock-btn { font-size: 11px; color: #f87171; font-weight: 700; background: none; border: none; cursor: pointer; white-space: nowrap; }
+.pl-actions { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
+.blocklist-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
+.blocklist-item:nth-child(odd) { background: #fff9e6; }
+.blocklist-item:nth-child(even) { background: #fff0f8; }
+.unblock-btn { font-size: 11px; color: #f87171; font-weight: 700; background: none; border: none; cursor: pointer; }
+.rate-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
+.rate-item:nth-child(odd) { background: #fff9e6; }
+.rate-item:nth-child(even) { background: #fff0f8; }
 .rate-btns { display: flex; gap: 4px; }
 .rate-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #e5e7eb; background: white; cursor: pointer; font-size: 14px; }
 .rate-btn.selected { border-color: #ec4899; background: #fce7f3; }
-.hint { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; color: #92400e; line-height: 1.6; }
+.hint { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; color: #92400e; line-height: 1.8; }
 </style>
 </head>
 <body>
@@ -70,9 +71,7 @@ input:focus, textarea:focus { border-color: #ec4899; }
     <h1>Let the Beat DROP 🎤</h1>
     <p>A little love note in music form 💕</p>
   </div>
-
   <div class="nav" id="nav"></div>
-
   <div id="screen-generate" class="screen"></div>
   <div id="screen-profile" class="screen"></div>
   <div id="screen-blocklist" class="screen"></div>
@@ -82,83 +81,95 @@ input:focus, textarea:focus { border-color: #ec4899; }
 
 <script>
 const DEFAULT_PROFILE = {
-  artists: "Bob Dylan, Tom Petty, Blues Traveler, Pearl Jam, Chappell Roan, Garth Brooks, Brooks & Dunn, Dwight Yoakam, The Mavericks, Fleetwood Mac, Alanis Morissette, Green Day, Bob Seger & The Silver Bullet Band, Jimmy Buffett, Jim Croce, Joni Mitchell, Paul Simon, Billy Joel, The Kinks, Old Crow Medicine Show, Bee Gees, ABBA, The Temptations, Frankie Valli & The Four Seasons, Neil Diamond, Matchbox 20, Dr. Dre, Snoop Dogg, Dua Lipa, Sabrina Carpenter, Doja Cat, Johnny Cash, Gary Allan, George Strait, Randy Travis, Go West, Elton John, Cher, Crosby Stills and Nash, The Band, Hootie and the Blowfish, Diamond Rio, BlackHawk, Toby Keith, America, Toto, Cat Stevens, REO Speedwagon, Guns N Roses, Foreigner",
-  favSongs: "Tangled Up in Blue - Bob Dylan, Hook - Blues Traveler, Wagon Wheel - Old Crow Medicine Show, Maria Shut Up and Kiss Me - Willie Nelson, Red Red Wine - Neil Diamond, Daughter - Pearl Jam, Neon Moon - Brooks and Dunn, 3 AM - Matchbox 20, After Midnight - Chappell Roan, The Subway - Chappell Roan, Go to Town - Doja Cat, Cecelia - Simon and Garfunkel, Laid - James, Regulate - Warren G and Nate Dogg, Dre Day - Dr. Dre, Jump Around - House of Pain, Insane in the Brain - Cypress Hill, Silver Spring - Fleetwood Mac, I Cant Dance - Genesis, Heartache Tonight - Eagles, Still the Same - Bob Seger, Daddy Sang Bass - Johnny Cash, Jackson - Johnny Cash and June Carter Cash, Cocaine Blues - Johnny Cash, Airplanes - Gary Allan, Nothing On But the Radio - Gary Allan, Songs About Rain - Gary Allan, See If I Care - Gary Allan, Best I Ever Had - Gary Allan, Her Man - Gary Allan, Forever and Ever Amen - Randy Travis, I Can Still Make Cheyenne - George Strait, King of Wishful Thinking - Go West, Sad Songs Say So Much - Elton John, I Guess Thats Why They Call It the Blues - Elton John, If I Could Turn Back Time - Cher, Southern Cross - Crosby Stills and Nash, Time - Hootie and the Blowfish, Dont Think I Dont Think About It - Darius Rucker, Norma Jean Riley - Diamond Rio, In a Week or Two - Diamond Rio, Ventura Highway - America, Honky Cat - Elton John, Africa - Toto",
-  dislikes: "R&B, jazz, overly soulful music, Bruce Springsteen, P. Diddy, Puff Daddy, Diddy, Sean Combs, Faith Evans, 112. Never suggest Missing You by Faith Evans or Ill Be Missing You by Puff Daddy.",
-  notes: "Jon loves music across virtually every genre and era. Always singing to himself. Lean toward upbeat, singable, anthemic songs. Hip-hop: stick to classic West Coast rap. Deep cuts OK for: Bob Dylan, Chappell Roan, Paul Simon, Johnny Cash, Tom Petty, Fleetwood Mac, Neil Diamond, The Mavericks, Dwight Yoakam, The Band, Cat Stevens. For Crosby Stills and Nash: hits plus Southern Cross (special significance). All others: hits only."
+  artists: "Bob Dylan, Tom Petty, Blues Traveler, Pearl Jam, Chappell Roan, Garth Brooks, Brooks and Dunn, Dwight Yoakam, The Mavericks, Fleetwood Mac, Alanis Morissette, Green Day, Bob Seger and The Silver Bullet Band, Jimmy Buffett, Jim Croce, Joni Mitchell, Paul Simon, Billy Joel, The Kinks, Old Crow Medicine Show, Bee Gees, ABBA, The Temptations, Frankie Valli and The Four Seasons, Neil Diamond, Matchbox 20, Dr. Dre, Snoop Dogg, Dua Lipa, Sabrina Carpenter, Doja Cat, Johnny Cash, Gary Allan, George Strait, Randy Travis, Go West, Elton John, Cher, Crosby Stills and Nash, The Band, Hootie and the Blowfish, Diamond Rio, BlackHawk, Toby Keith, America, Toto, Cat Stevens, REO Speedwagon, Guns N Roses, Foreigner",
+  favSongs: "Tangled Up in Blue by Bob Dylan, Hook by Blues Traveler, Wagon Wheel by Old Crow Medicine Show, Maria Shut Up and Kiss Me by Willie Nelson, Red Red Wine by Neil Diamond, Daughter by Pearl Jam, Neon Moon by Brooks and Dunn, 3 AM by Matchbox 20, After Midnight by Chappell Roan, The Subway by Chappell Roan, Go to Town by Doja Cat, Cecelia by Simon and Garfunkel, Laid by James, Regulate by Warren G and Nate Dogg, Dre Day by Dr. Dre, Jump Around by House of Pain, Insane in the Brain by Cypress Hill, Silver Spring by Fleetwood Mac, I Cant Dance by Genesis, Heartache Tonight by Eagles, Still the Same by Bob Seger, Daddy Sang Bass by Johnny Cash, Jackson by Johnny Cash and June Carter Cash, Cocaine Blues by Johnny Cash, Airplanes by Gary Allan, Nothing On But the Radio by Gary Allan, Songs About Rain by Gary Allan, Forever and Ever Amen by Randy Travis, I Can Still Make Cheyenne by George Strait, King of Wishful Thinking by Go West, Sad Songs Say So Much by Elton John, If I Could Turn Back Time by Cher, Southern Cross by Crosby Stills and Nash, Time by Hootie and the Blowfish, Norma Jean Riley by Diamond Rio, Ventura Highway by America, Africa by Toto",
+  dislikes: "R and B, jazz, Bruce Springsteen, P Diddy, Puff Daddy, Diddy, Sean Combs, Faith Evans, 112",
+  notes: "Jon loves music across every genre and era. Always singing to himself. Lean toward upbeat singable anthemic songs. For hip-hop stick to classic West Coast rap like Dr Dre Snoop Cypress Hill Warren G. Deep cuts welcome for Bob Dylan, Chappell Roan, Paul Simon, Johnny Cash, Tom Petty, Fleetwood Mac, Neil Diamond, The Mavericks, Dwight Yoakam, The Band, Cat Stevens. For Crosby Stills and Nash stick to hits plus Southern Cross. For all others stick to well known hits only."
 };
+
 const DEFAULT_OVERPLAYED = ["Homeward Bound","Take It Easy","Take Me Home Country Roads","Home","The Weight"];
 
-// State
 let state = {
   screen: "generate",
-  profile: JSON.parse(localStorage.getItem("jon-profile") || "null") || DEFAULT_PROFILE,
-  ratings: JSON.parse(localStorage.getItem("jon-ratings") || "{}"),
-  lastPlaylist: JSON.parse(localStorage.getItem("last-playlist") || "[]"),
-  blocklist: JSON.parse(localStorage.getItem("blocklist") || "null") || DEFAULT_OVERPLAYED,
-  clientId: localStorage.getItem("yt-client-id") || "",
-  apiKey: localStorage.getItem("anthropic-key") || "",
-  accessToken: localStorage.getItem("yt-access-token") || "",
+  profile: null,
+  ratings: {},
+  lastPlaylist: [],
+  blocklist: null,
+  clientId: "",
+  apiKey: "",
+  accessToken: "",
   songs: [],
-  generated: false,
-  ytResult: null,
-  ytUrl: "",
+  ytUrl: ""
 };
 
+// Load from localStorage
+try { state.profile = JSON.parse(localStorage.getItem("jon-profile")) || DEFAULT_PROFILE; } catch(e) { state.profile = DEFAULT_PROFILE; }
+try { state.ratings = JSON.parse(localStorage.getItem("jon-ratings")) || {}; } catch(e) { state.ratings = {}; }
+try { state.lastPlaylist = JSON.parse(localStorage.getItem("last-playlist")) || []; } catch(e) { state.lastPlaylist = []; }
+try { state.blocklist = JSON.parse(localStorage.getItem("blocklist")) || DEFAULT_OVERPLAYED; } catch(e) { state.blocklist = DEFAULT_OVERPLAYED; }
+state.clientId = localStorage.getItem("yt-client-id") || "";
+state.apiKey = localStorage.getItem("anthropic-key") || "";
+state.accessToken = localStorage.getItem("yt-access-token") || "";
+
 // Check for OAuth token in URL
-const hash = window.location.hash;
-if (hash && hash.includes("access_token")) {
-  const params = new URLSearchParams(hash.substring(1));
-  const token = params.get("access_token");
-  if (token) {
-    state.accessToken = token;
-    localStorage.setItem("yt-access-token", token);
-    window.history.replaceState(null, "", window.location.pathname);
+(function() {
+  var h = window.location.hash;
+  if (h && h.includes("access_token")) {
+    var params = new URLSearchParams(h.substring(1));
+    var token = params.get("access_token");
+    if (token) {
+      state.accessToken = token;
+      localStorage.setItem("yt-access-token", token);
+      window.history.replaceState(null, "", window.location.pathname);
+      if (localStorage.getItem("pending-yt-save") === "true" && state.lastPlaylist.length > 0) {
+        localStorage.removeItem("pending-yt-save");
+        state.songs = state.lastPlaylist;
+        setTimeout(function() {
+          renderPlaylistCard("", "", 0);
+          setTimeout(function() { createYouTubePlaylist("", ""); }, 500);
+        }, 200);
+      }
+    }
   }
-}
+})();
 
 function save(key, val) {
-  if (typeof val === "object") localStorage.setItem(key, JSON.stringify(val));
-  else localStorage.setItem(key, val);
+  try {
+    localStorage.setItem(key, typeof val === "object" ? JSON.stringify(val) : val);
+  } catch(e) {}
 }
 
 function setScreen(s) {
   state.screen = s;
   renderNav();
-  document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".screen").forEach(function(el) { el.classList.remove("active"); });
   document.getElementById("screen-" + s).classList.add("active");
 }
 
 function renderNav() {
-  const tabs = [
+  var tabs = [
     {id:"generate", label:"🎶 Create"},
     {id:"profile", label:"⭐ Profile"},
     {id:"blocklist", label:"🚫 Blocklist"},
-    {id:"setup", label: state.clientId ? "⚙️ Setup ✓" : "⚙️ Setup"},
-    ...(state.lastPlaylist.length > 0 ? [{id:"rate", label:"📊 Rate"}] : [])
+    {id:"setup", label: state.clientId ? "⚙️ Setup ✓" : "⚙️ Setup"}
   ];
-  document.getElementById("nav").innerHTML = tabs.map(t =>
-    `<button class="${state.screen===t.id?'active':''}" onclick="setScreen('${t.id}')">${t.label}</button>`
-  ).join("");
+  if (state.lastPlaylist.length > 0) tabs.push({id:"rate", label:"📊 Rate"});
+  document.getElementById("nav").innerHTML = tabs.map(function(t) {
+    return '<button class="' + (state.screen===t.id?'active':'') + '" onclick="setScreen(\'' + t.id + '\')">' + t.label + '</button>';
+  }).join("");
 }
 
-// SETUP SCREEN
 function renderSetup() {
-  document.getElementById("screen-setup").innerHTML = `
-    <div class="card">
-      <h2>⚙️ Setup</h2>
-      <p class="sub">Enter your credentials to power the app.</p>
-      ${state.accessToken ? `<div class="msg msg-success">✓ Signed in to YouTube Music! <button onclick="signOutYT()" style="margin-left:8px;background:none;border:none;color:#dc2626;font-weight:700;cursor:pointer;font-size:12px">Sign out</button></div>` : ""}
-      <label>Anthropic API Key</label>
-      <input type="password" id="inp-apikey" placeholder="sk-ant-..." value="${state.apiKey}">
-      <label>Google OAuth Client ID</label>
-      <input type="password" id="inp-clientid" placeholder="Ends in .googleusercontent.com" value="${state.clientId}">
-      <button class="btn btn-main" onclick="saveSetup()">💾 Save</button>
-      <div class="hint">
-        <strong>Anthropic API Key:</strong> Get from console.anthropic.com → API Keys<br><br>
-        <strong>Google Client ID:</strong> From your downloaded JSON file or Google Cloud Console → Credentials
-      </div>
-    </div>`;
+  document.getElementById("screen-setup").innerHTML =
+    '<div class="card"><h2>⚙️ Setup</h2>' +
+    (state.accessToken ? '<div class="msg msg-success">✓ Signed in to YouTube Music! <button onclick="signOutYT()" style="margin-left:8px;background:none;border:none;color:#dc2626;font-weight:700;cursor:pointer">Sign out</button></div>' : '') +
+    '<label>Anthropic API Key</label>' +
+    '<input type="password" id="inp-apikey" placeholder="sk-ant-..." value="' + state.apiKey + '">' +
+    '<label>Google OAuth Client ID</label>' +
+    '<input type="password" id="inp-clientid" placeholder="Ends in .googleusercontent.com" value="' + state.clientId + '">' +
+    '<button class="btn btn-main" onclick="saveSetup()">💾 Save</button>' +
+    '<div class="hint">Get your Anthropic API Key from console.anthropic.com under API Keys.<br>Get your Google Client ID from Google Cloud Console under Credentials.</div>' +
+    '</div>';
 }
 
 function saveSetup() {
@@ -177,21 +188,14 @@ function signOutYT() {
   renderSetup();
 }
 
-// PROFILE SCREEN
 function renderProfile() {
-  document.getElementById("screen-profile").innerHTML = `
-    <div class="card">
-      <h2>⭐ Jon's Music Profile</h2>
-      <label>🎸 Favorite Artists</label>
-      <textarea rows="4" id="p-artists">${state.profile.artists}</textarea>
-      <label>💿 All-Time Favorite Songs</label>
-      <textarea rows="4" id="p-favSongs">${state.profile.favSongs}</textarea>
-      <label>🚫 Things He Does Not Like</label>
-      <textarea rows="2" id="p-dislikes">${state.profile.dislikes}</textarea>
-      <label>📝 Anything Else</label>
-      <textarea rows="3" id="p-notes">${state.profile.notes}</textarea>
-      <button class="btn btn-main" onclick="saveProfile()">💾 Save Profile</button>
-    </div>`;
+  document.getElementById("screen-profile").innerHTML =
+    '<div class="card"><h2>⭐ Jon\'s Music Profile</h2>' +
+    '<label>🎸 Favorite Artists</label><textarea rows="4" id="p-artists">' + state.profile.artists + '</textarea>' +
+    '<label>💿 Favorite Songs</label><textarea rows="4" id="p-favSongs">' + state.profile.favSongs + '</textarea>' +
+    '<label>🚫 Dislikes</label><textarea rows="2" id="p-dislikes">' + state.profile.dislikes + '</textarea>' +
+    '<label>📝 Notes</label><textarea rows="3" id="p-notes">' + state.profile.notes + '</textarea>' +
+    '<button class="btn btn-main" onclick="saveProfile()">💾 Save Profile</button></div>';
 }
 
 function saveProfile() {
@@ -199,39 +203,29 @@ function saveProfile() {
     artists: document.getElementById("p-artists").value,
     favSongs: document.getElementById("p-favSongs").value,
     dislikes: document.getElementById("p-dislikes").value,
-    notes: document.getElementById("p-notes").value,
+    notes: document.getElementById("p-notes").value
   };
   save("jon-profile", state.profile);
-  alert("Profile saved!");
+  alert("Saved!");
 }
 
-// BLOCKLIST SCREEN
 function renderBlocklist() {
-  const items = state.blocklist.map((s,i) =>
-    `<div class="blocklist-item"><span style="font-size:13px;color:#374151">${s}</span><button class="unblock-btn" onclick="unblock(${i})">✕ Unblock</button></div>`
-  ).join("");
-  document.getElementById("screen-blocklist").innerHTML = `
-    <div class="card">
-      <h2>🚫 Blocked Songs</h2>
-      <p class="sub">All generated songs auto-added. Unblock when ready for them to return!</p>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <input id="bl-input" placeholder="Manually add a song title..." style="flex:1" onkeydown="if(event.key==='Enter')addBlock()">
-        <button class="btn btn-main" onclick="addBlock()" style="width:auto;padding:8px 16px;margin-top:0">Add</button>
-      </div>
-      <div style="margin-top:12px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase">Blocked (${state.blocklist.length})</span>
-          ${state.blocklist.length > 0 ? `<button onclick="clearBlocklist()" style="font-size:11px;color:#f87171;font-weight:700;background:none;border:none;cursor:pointer">🗑 Clear All</button>` : ""}
-        </div>
-        ${state.blocklist.length === 0 ? `<p style="font-size:12px;color:#9ca3af;font-style:italic">No songs blocked yet.</p>` : items}
-      </div>
-    </div>`;
+  var items = state.blocklist.map(function(s, i) {
+    return '<div class="blocklist-item"><span style="font-size:13px;color:#374151">' + s + '</span><button class="unblock-btn" onclick="unblock(' + i + ')">✕ Unblock</button></div>';
+  }).join("");
+  document.getElementById("screen-blocklist").innerHTML =
+    '<div class="card"><h2>🚫 Blocked Songs</h2>' +
+    '<p style="font-size:12px;color:#6b7280;margin-bottom:8px">All generated songs auto-added here. Unblock when ready!</p>' +
+    '<div style="display:flex;gap:8px"><input id="bl-input" placeholder="Add a song title..." style="flex:1" onkeydown="if(event.key===\'Enter\')addBlock()"><button class="btn btn-main" onclick="addBlock()" style="width:auto;padding:8px 16px;margin-top:0">Add</button></div>' +
+    '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#6b7280">BLOCKED (' + state.blocklist.length + ')</span>' +
+    (state.blocklist.length > 0 ? '<button onclick="clearBlocklist()" style="font-size:11px;color:#f87171;font-weight:700;background:none;border:none;cursor:pointer">🗑 Clear All</button>' : '') +
+    '</div>' + (state.blocklist.length === 0 ? '<p style="font-size:12px;color:#9ca3af;font-style:italic">No songs blocked yet.</p>' : items) + '</div></div>';
 }
 
 function addBlock() {
-  const val = document.getElementById("bl-input").value.trim();
+  var val = document.getElementById("bl-input").value.trim();
   if (!val) return;
-  state.blocklist = [...new Set([...state.blocklist, val])];
+  state.blocklist = Array.from(new Set(state.blocklist.concat([val])));
   save("blocklist", state.blocklist);
   renderBlocklist();
 }
@@ -250,34 +244,25 @@ function clearBlocklist() {
   }
 }
 
-// RATE SCREEN
 function renderRate() {
   if (!state.lastPlaylist.length) {
-    document.getElementById("screen-rate").innerHTML = `<div class="card"><p style="text-align:center;color:#6b7280">Generate a playlist first!</p></div>`;
+    document.getElementById("screen-rate").innerHTML = '<div class="card"><p style="text-align:center;color:#6b7280">Generate a playlist first!</p></div>';
     return;
   }
-  const items = state.lastPlaylist.map((song, i) => {
-    const r = state.ratings[song] || "";
-    return `<div class="rate-item">
-      <span style="font-size:12px;color:#374151;flex:1;margin-right:8px">${song}</span>
-      <div class="rate-btns">
-        ${[["❤️","loved"],["👍","liked"],["👎","skip"]].map(([e,v]) =>
-          `<button class="rate-btn ${r===v?'selected':''}" onclick="rateSong('${song.replace(/'/g,"\\'")}','${v}')">${e}</button>`
-        ).join("")}
-      </div>
-    </div>`;
+  var items = state.lastPlaylist.map(function(song, i) {
+    var r = state.ratings[song] || "";
+    var btns = [["❤️","loved"],["👍","liked"],["👎","skip"]].map(function(x) {
+      return '<button class="rate-btn ' + (r===x[1]?'selected':'') + '" onclick="rateSong(' + i + ',\'' + x[1] + '\')">' + x[0] + '</button>';
+    }).join("");
+    return '<div class="rate-item"><span style="font-size:12px;color:#374151;flex:1;margin-right:8px">' + song + '</span><div class="rate-btns">' + btns + '</div></div>';
   }).join("");
-  document.getElementById("screen-rate").innerHTML = `
-    <div class="card">
-      <h2>📊 Rate Last Playlist</h2>
-      <p class="sub">How did Jon react? Helps future playlists get smarter!</p>
-      ${items}
-      <button class="btn btn-main" onclick="saveRatings()">💾 Save Ratings</button>
-    </div>`;
+  document.getElementById("screen-rate").innerHTML =
+    '<div class="card"><h2>📊 Rate Last Playlist</h2><p style="font-size:12px;color:#6b7280;margin-bottom:12px">How did Jon react?</p>' + items +
+    '<button class="btn btn-main" onclick="saveRatings()">💾 Save Ratings</button></div>';
 }
 
-function rateSong(song, val) {
-  state.ratings[song] = val;
+function rateSong(i, val) {
+  state.ratings[state.lastPlaylist[i]] = val;
   renderRate();
 }
 
@@ -286,93 +271,98 @@ function saveRatings() {
   alert("Ratings saved!");
 }
 
-// GENERATE SCREEN
 function renderGenerate() {
-  document.getElementById("screen-generate").innerHTML = `
-    <div class="card">
-      ${Object.keys(state.ratings).filter(k=>state.ratings[k]==="loved").length > 0 ? `<div class="msg msg-info">✨ Using Jon's profile + ${Object.keys(state.ratings).filter(k=>state.ratings[k]==="loved").length} loved songs!</div>` : ""}
-      <label>🎨 Today's Mood or Theme *</label>
-      <input id="g-mood" placeholder="e.g. Rainy day cozy, Pump-up Friday, Thinking of you...">
-      <label>💌 A little note for Jon (optional)</label>
-      <input id="g-note" placeholder="e.g. Thinking of you today! Hope this brightens your afternoon ♥">
-      <label>🎵 Your Picks (optional — up to 3)</label>
-      <input id="g-a1" placeholder="Song 1 — e.g. Free Bird - Lynyrd Skynyrd" style="margin-bottom:6px">
-      <input id="g-a2" placeholder="Song 2" style="margin-bottom:6px">
-      <input id="g-a3" placeholder="Song 3">
-      <div id="g-error" class="msg msg-error" style="display:none"></div>
-      <button class="btn btn-main" id="g-btn" onclick="generate()">🎶 Generate Playlist</button>
-    </div>
-    <div id="playlist-result"></div>`;
+  document.getElementById("screen-generate").innerHTML =
+    '<div class="card">' +
+    '<label>🎨 Today\'s Mood or Theme *</label>' +
+    '<input id="g-mood" placeholder="e.g. Rainy day cozy, Pump-up Friday, Thinking of you...">' +
+    '<label>💌 A little note for Jon (optional)</label>' +
+    '<input id="g-note" placeholder="e.g. Thinking of you today ♥">' +
+    '<label>🎵 Your Picks (optional — up to 3)</label>' +
+    '<input id="g-a1" placeholder="Song 1 — e.g. Free Bird by Lynyrd Skynyrd" style="margin-bottom:6px">' +
+    '<input id="g-a2" placeholder="Song 2" style="margin-bottom:6px">' +
+    '<input id="g-a3" placeholder="Song 3">' +
+    '<div id="g-error" class="msg msg-error" style="display:none"></div>' +
+    '<button class="btn btn-main" id="g-btn" onclick="generate()">🎶 Generate Playlist</button>' +
+    '</div><div id="playlist-result"></div>';
 }
 
 function getRecentSongs() {
-  const history = JSON.parse(localStorage.getItem("playlist-history") || "[]");
-  const fiveDays = 5 * 24 * 60 * 60 * 1000;
-  const recent = [];
-  history.forEach(e => { if (Date.now() - e.timestamp < fiveDays) recent.push(...e.songs); });
-  const unique = [...new Set(recent)];
-  return { full: unique, titles: [...new Set(unique.map(s => s.split(" - ")[0].trim()))] };
+  try {
+    var history = JSON.parse(localStorage.getItem("playlist-history") || "[]");
+    var fiveDays = 5 * 24 * 60 * 60 * 1000;
+    var recent = [];
+    history.forEach(function(e) { if (Date.now() - e.timestamp < fiveDays) recent = recent.concat(e.songs); });
+    var unique = Array.from(new Set(recent));
+    var titles = Array.from(new Set(unique.map(function(s) { return s.split(" by ")[0].trim(); })));
+    return { full: unique, titles: titles };
+  } catch(e) { return { full: [], titles: [] }; }
 }
 
 function saveToHistory(songs) {
-  const history = JSON.parse(localStorage.getItem("playlist-history") || "[]");
-  history.push({ timestamp: Date.now(), songs });
-  const trimmed = history.filter(e => Date.now() - e.timestamp < 30*24*60*60*1000);
-  localStorage.setItem("playlist-history", JSON.stringify(trimmed));
+  try {
+    var history = JSON.parse(localStorage.getItem("playlist-history") || "[]");
+    history.push({ timestamp: Date.now(), songs: songs });
+    var trimmed = history.filter(function(e) { return Date.now() - e.timestamp < 30*24*60*60*1000; });
+    localStorage.setItem("playlist-history", JSON.stringify(trimmed));
+  } catch(e) {}
 }
 
 function hardFilter(songList, recentTitles) {
-  const allBlocked = [...new Set([...DEFAULT_OVERPLAYED, ...state.blocklist, ...recentTitles])].map(t => t.toLowerCase().trim());
-  return songList.filter(s => {
-    const title = s.split(" - ")[0].trim().toLowerCase();
-    return !allBlocked.some(b => title === b);
+  var allBlocked = Array.from(new Set(DEFAULT_OVERPLAYED.concat(state.blocklist).concat(recentTitles))).map(function(t) { return t.toLowerCase().trim(); });
+  return songList.filter(function(s) {
+    var title = s.split(" by ")[0].trim().toLowerCase();
+    return !allBlocked.some(function(b) { return title === b; });
   });
 }
 
-async function generate() {
-  const mood = document.getElementById("g-mood").value.trim();
-  const note = document.getElementById("g-note").value.trim();
-  const picked = ["g-a1","g-a2","g-a3"].map(id => document.getElementById(id).value.trim()).filter(Boolean);
-  const errEl = document.getElementById("g-error");
+function parseSongList(text) {
+  // Parse numbered list: "1. Song by Artist" or "1. Song - Artist"
+  var lines = text.split("\n");
+  var songs = [];
+  lines.forEach(function(line) {
+    var clean = line.replace(/^\d+[\.\)]\s*/, "").trim();
+    if (clean.length > 3) songs.push(clean);
+  });
+  return songs;
+}
 
-  if (!mood) { errEl.textContent = "Please enter a mood or theme!"; errEl.style.display="block"; return; }
-  if (!state.apiKey) { errEl.textContent = "Please add your Anthropic API key in the Setup tab!"; errEl.style.display="block"; return; }
+async function generate() {
+  var mood = document.getElementById("g-mood").value.trim();
+  var note = document.getElementById("g-note").value.trim();
+  var picked = ["g-a1","g-a2","g-a3"].map(function(id) { return document.getElementById(id).value.trim(); }).filter(Boolean);
+  var errEl = document.getElementById("g-error");
+
+  if (!mood) { errEl.textContent = "Please enter a mood or theme!"; errEl.style.display = "block"; return; }
+  if (!state.apiKey) { errEl.textContent = "Please add your Anthropic API key in Setup!"; errEl.style.display = "block"; return; }
   errEl.style.display = "none";
 
-  const btn = document.getElementById("g-btn");
+  var btn = document.getElementById("g-btn");
   btn.textContent = "✨ Building your playlist...";
   btn.disabled = true;
 
-  const recent = getRecentSongs();
-  const allBlocked = [...new Set([...DEFAULT_OVERPLAYED, ...state.blocklist, ...recent.titles])];
-  const loved = Object.entries(state.ratings).filter(([,v])=>v==="loved").map(([k])=>k);
-  const liked = Object.entries(state.ratings).filter(([,v])=>v==="liked").map(([k])=>k);
-  const skipped = Object.entries(state.ratings).filter(([,v])=>v==="skip").map(([k])=>k);
+  var recent = getRecentSongs();
+  var allBlocked = Array.from(new Set(DEFAULT_OVERPLAYED.concat(state.blocklist).concat(recent.titles)));
+  var loved = Object.keys(state.ratings).filter(function(k) { return state.ratings[k] === "loved"; });
+  var skipped = Object.keys(state.ratings).filter(function(k) { return state.ratings[k] === "skip"; });
 
-  const profileSection = [
-    state.profile.artists && "Favorite artists: " + state.profile.artists,
-    state.profile.favSongs && "All-time favorites: " + state.profile.favSongs,
-    state.profile.dislikes && "Dislikes: " + state.profile.dislikes,
-    state.profile.notes && "Notes: " + state.profile.notes,
-  ].filter(Boolean).join("\n");
-
-  const ratingsSection = [
-    loved.length && "Songs he LOVED: " + loved.slice(-15).join(", "),
-    liked.length && "Songs he LIKED: " + liked.slice(-15).join(", "),
-    skipped.length && "Songs he SKIPPED: " + skipped.slice(-15).join(", "),
-  ].filter(Boolean).join("\n");
-
-  const prompt = "You are a music curator making a playlist for Jon.\n\n"
-    + (profileSection ? "JON'S PROFILE:\n" + profileSection + "\n" : "")
-    + (ratingsSection ? "\nPAST RATINGS:\n" + ratingsSection + "\n" : "")
-    + "\nNEVER suggest these songs: " + allBlocked.join(", ") + "\n"
-    + "\nMood/theme: " + mood
-    + (picked.length ? "\nAlready in playlist (do NOT repeat): " + picked.join(", ") : "")
-    + "\n\nSuggest " + (20 - picked.length) + " fresh varied songs. Dig deeper than obvious choices."
-    + "\n\nRespond with a plain numbered list only:\n1. Song Title - Artist\n2. Song Title - Artist\nNo JSON, no brackets, no extra text.";
+  var prompt = "You are a music curator making a playlist for Jon who loves: " + state.profile.artists + "\n\n" +
+    "His all-time favorite songs include: " + state.profile.favSongs + "\n\n" +
+    "He dislikes: " + state.profile.dislikes + "\n\n" +
+    "Notes: " + state.profile.notes + "\n\n" +
+    (loved.length ? "Songs he loved recently: " + loved.slice(-10).join(", ") + "\n\n" : "") +
+    (skipped.length ? "Songs to avoid (he skipped these): " + skipped.slice(-10).join(", ") + "\n\n" : "") +
+    "Never suggest these songs: " + allBlocked.join(", ") + "\n\n" +
+    "Today's mood/theme: " + mood + "\n" +
+    (picked.length ? "Already chosen songs (do not repeat): " + picked.join(", ") + "\n" : "") +
+    "\nSuggest " + (20 - picked.length) + " songs. Be creative and varied.\n\n" +
+    "IMPORTANT: Reply with ONLY a simple numbered list. Each line must start with a number and period. Use this exact format:\n" +
+    "1. Song Name by Artist Name\n" +
+    "2. Song Name by Artist Name\n" +
+    "Do not include any other text, explanation, or formatting.";
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    var res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -380,44 +370,28 @@ async function generate() {
         "anthropic-version": "2023-06-01",
         "anthropic-dangerous-direct-browser-access": "true"
       },
-      body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 1500, messages: [{ role: "user", content: prompt }] })
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1500,
+        system: "You are a music playlist generator. You ONLY output numbered lists of songs. Never use JSON. Never use brackets. Format: 1. Song Name by Artist Name",
+        messages: [{ role: "user", content: prompt }]
+      })
     });
-    const data = await res.json();
+    var data = await res.json();
     if (data.error) throw new Error(data.error.message);
-    const text = data.content.map(b => b.text||"").join("");
-    const suggested = text.split("\n").map(line => line.replace(/^\d+[\.\)]\s*/, "").trim()).filter(line => line.length > 3);
-    const filtered = hardFilter(suggested, recent.titles);
-          const allSongs = [...picked, ...filtered].slice(0, 20);
-      // If we got fewer than 20, request more
-      if (allSongs.length < 20) {
-        const needed = 20 - allSongs.length;
-        const extraPrompt = prompt + "\n\nYou previously suggested songs but we need " + needed + " more. Suggest " + needed + " additional different songs.\n\nRespond ONLY with a JSON array: [\"Song - Artist\", ...]. No markdown.";
-        try {
-          const res2 = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": state.apiKey, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
-            body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 800, messages: [{ role: "user", content: extraPrompt }] })
-          });
-          const data2 = await res2.json();
-          const text2 = data2.content.map(b => b.text||"").join("");
-          const match2 = text2.match(/\[[\s\S]*\]/);
-          if (match2) {
-            const extra = JSON.parse(match2[0]);
-            const extraFiltered = hardFilter(extra, recent.titles);
-            allSongs.push(...extraFiltered.slice(0, needed));
-          }
-        } catch(e) {}
-      }
+    var text = data.content.map(function(b) { return b.text || ""; }).join("");
+    var suggested = parseSongList(text);
+    var filtered = hardFilter(suggested, recent.titles);
+    var allSongs = picked.concat(filtered).slice(0, 20);
 
     state.songs = allSongs;
     state.lastPlaylist = allSongs;
-    state.generated = true;
-    state.ytResult = null;
+    state.ytUrl = "";
     save("last-playlist", allSongs);
     saveToHistory(allSongs);
 
-    const newTitles = allSongs.map(s => s.split(" - ")[0].trim());
-    state.blocklist = [...new Set([...state.blocklist, ...newTitles])];
+    var newTitles = allSongs.map(function(s) { return s.split(" by ")[0].trim(); });
+    state.blocklist = Array.from(new Set(state.blocklist.concat(newTitles)));
     save("blocklist", state.blocklist);
 
     renderNav();
@@ -432,99 +406,75 @@ async function generate() {
 }
 
 function renderPlaylistCard(mood, note, pickedCount) {
-  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
-  const songItems = state.songs.map((song, i) => `
-    <div class="song-item">
-      <span class="song-num" style="color:${i<pickedCount?'#ec4899':'#f59e0b'}">${i+1}.</span>
-      <span>
-        <a class="song-link" href="https://music.youtube.com/search?q=${encodeURIComponent(song)}" target="_blank">${song}</a>
-        ${i<pickedCount?'<span class="anchor-badge">★ your pick</span>':''}
-      </span>
-    </div>`).join("");
+  var today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  var songItems = state.songs.map(function(song, i) {
+    return '<div class="song-item">' +
+      '<span class="song-num" style="color:' + (i < pickedCount ? '#ec4899' : '#f59e0b') + '">' + (i+1) + '.</span>' +
+      '<span><a class="song-link" href="https://music.youtube.com/search?q=' + encodeURIComponent(song) + '" target="_blank">' + song + '</a>' +
+      (i < pickedCount ? '<span class="anchor-badge">★ your pick</span>' : '') +
+      '</span></div>';
+  }).join("");
 
-  document.getElementById("playlist-result").innerHTML = `
-    <div class="playlist-card">
-      <div class="pl-header">
-        <div style="font-size:32px;margin-bottom:4px">🎵</div>
-        <h2>Let the Beat DROP 🎤</h2>
-        <p>${today}</p>
-      </div>
-      <div class="pl-body">
-        <div class="vibe"><span>🎨 Today's Vibe: ${mood}</span></div>
-        ${note ? `<div class="note-box">💌 "${note}"</div>` : ""}
-        <div class="song-list-label">🎶 Your Playlist</div>
-        ${songItems}
-        <div class="hearts">♥ ♪ ♥ ♪ ♥</div>
-        <div class="pl-actions">
-          ${state.clientId ? `
-          <button class="btn btn-yt" id="yt-btn" onclick="handleYouTube('${encodeURIComponent(mood)}','${encodeURIComponent(note||'')}')">
-            ${state.accessToken ? "🎵 Save to YouTube Music" : "🎵 Sign in & Save to YouTube Music"}
-          </button>
-          <div id="yt-result"></div>` : ""}
-          <div class="btn-row">
-            <button class="btn btn-main" id="copy-btn" onclick="copyText('${encodeURIComponent(mood)}','${encodeURIComponent(note||'')}',${pickedCount})">📋 Copy Text</button>
-            <button class="btn btn-indigo" onclick="openMail('${encodeURIComponent(mood)}','${encodeURIComponent(note||'')}',${pickedCount})">📧 Open in Mail</button>
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
+  var ytBtns = state.clientId ?
+    '<button class="btn btn-yt" id="yt-btn" onclick="handleYouTube()">' +
+    (state.accessToken ? "🎵 Save to YouTube Music" : "🎵 Sign in & Save to YouTube Music") +
+    '</button><div id="yt-result"></div>' : "";
 
-function buildText(mood, note, pickedCount) {
-  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
-  const lines = ["🎵 Let the Beat DROP — " + today, "🎨 Today's Vibe: " + mood, note ? '\n💌 "' + note + '"\n' : "", "", "🎶 Your Playlist:"];
-  state.songs.forEach((s,i) => lines.push((i+1) + ". " + s + (i<pickedCount?" ★":"") + "\n   https://music.youtube.com/search?q=" + encodeURIComponent(s)));
-  lines.push("","♥ ♪ ♥ ♪ ♥");
-  return lines.join("\n");
-}
-
-function copyText(moodEnc, noteEnc, pc) {
-  const mood = decodeURIComponent(moodEnc), note = decodeURIComponent(noteEnc);
-  navigator.clipboard.writeText(buildText(mood, note, pc));
-  const btn = document.getElementById("copy-btn");
-  btn.textContent = "✓ Copied!";
-  btn.className = "btn btn-green";
-  setTimeout(() => { btn.textContent = "📋 Copy Text"; btn.className = "btn btn-main"; }, 3000);
+  document.getElementById("playlist-result").innerHTML =
+    '<div class="playlist-card">' +
+    '<div class="pl-header"><div style="font-size:32px;margin-bottom:4px">🎵</div><h2>Let the Beat DROP 🎤</h2><p>' + today + '</p></div>' +
+    '<div class="pl-body">' +
+    '<div class="vibe"><span>🎨 Today\'s Vibe: ' + mood + '</span></div>' +
+    (note ? '<div class="note-box">💌 "' + note + '"</div>' : '') +
+    '<div class="song-list-label">🎶 Your Playlist</div>' +
+    songItems +
+    '<div class="hearts">♥ ♪ ♥ ♪ ♥</div>' +
+    '<div class="pl-actions">' +
+    ytBtns +
+    '<div class="btn-row">' +
+    '<button class="btn btn-gmail" id="mail-btn" onclick="openMail()">📧 Send via Gmail</button>' +
+    '</div></div></div></div>';
 }
 
 function openMail() {
-  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
-  const subject = encodeURIComponent("🎵 Let the Beat DROP — " + today);
-  const noteEl = document.getElementById("g-note");
-  const note = noteEl ? noteEl.value.trim() : "";
-  const ytUrl = state.ytUrl || "";
-  const bodyText = (note ? note + "\n\n" : "") +
-    (ytUrl ? "▶ Today's Playlist:\n" + ytUrl : "Save to YouTube Music first to get the link!") +
+  var today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  var subject = encodeURIComponent("🎵 Let the Beat DROP — " + today);
+  var noteEl = document.getElementById("g-note");
+  var note = noteEl ? noteEl.value.trim() : "";
+  var ytUrl = state.ytUrl || "";
+  var body = (note ? note + "\n\n" : "") +
+    (ytUrl ? "▶ Today's Playlist:\n" + ytUrl : "Save to YouTube Music first to include the playlist link!") +
     "\n\n♥ ♪ ♥ ♪ ♥";
-  window.open("https://mail.google.com/mail/?view=cm&su=" + subject + "&body=" + encodeURIComponent(bodyText), "_blank");
+  window.open("https://mail.google.com/mail/?view=cm&su=" + subject + "&body=" + encodeURIComponent(body), "_blank");
 }
 
-function handleYouTube(moodEnc, noteEnc) {
+function handleYouTube() {
   if (!state.accessToken) { signInToYouTube(); return; }
-  createYouTubePlaylist(decodeURIComponent(moodEnc), decodeURIComponent(noteEnc));
+  var btn = document.getElementById("yt-btn");
+  var mood = document.getElementById("g-mood") ? document.getElementById("g-mood").value.trim() : "";
+  var note = document.getElementById("g-note") ? document.getElementById("g-note").value.trim() : "";
+  createYouTubePlaylist(mood, note);
 }
 
 function signInToYouTube() {
-  // Save current playlist and mood/note before redirecting
   localStorage.setItem("pending-yt-save", "true");
-  const redirectUri = window.location.href.split("#")[0].split("?")[0];
-  const authUrl = "https://accounts.google.com/o/oauth2/v2/auth"
-    + "?client_id=" + encodeURIComponent(state.clientId)
-    + "&redirect_uri=" + encodeURIComponent(redirectUri)
-    + "&response_type=token"
-    + "&scope=" + encodeURIComponent("https://www.googleapis.com/auth/youtube");
+  var redirectUri = window.location.href.split("#")[0].split("?")[0];
+  var authUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
+    "?client_id=" + encodeURIComponent(state.clientId) +
+    "&redirect_uri=" + encodeURIComponent(redirectUri) +
+    "&response_type=token" +
+    "&scope=" + encodeURIComponent("https://www.googleapis.com/auth/youtube");
   window.location.href = authUrl;
 }
 
 async function createYouTubePlaylist(mood, note) {
-  const btn = document.getElementById("yt-btn");
-  const resultEl = document.getElementById("yt-result");
-  btn.textContent = "⏳ Creating playlist...";
-  btn.disabled = true;
+  var btn = document.getElementById("yt-btn");
+  var resultEl = document.getElementById("yt-result");
+  if (btn) { btn.textContent = "⏳ Creating playlist..."; btn.disabled = true; }
 
-  const today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  var today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
   try {
-    const createRes = await fetch("https://www.googleapis.com/youtube/v3/playlists?part=snippet,status", {
+    var createRes = await fetch("https://www.googleapis.com/youtube/v3/playlists?part=snippet,status", {
       method: "POST",
       headers: { "Authorization": "Bearer " + state.accessToken, "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -532,43 +482,44 @@ async function createYouTubePlaylist(mood, note) {
         status: { privacyStatus: "unlisted" }
       })
     });
-    const playlist = await createRes.json();
+    var playlist = await createRes.json();
     if (playlist.error) {
-      if (playlist.error.code === 401) { state.accessToken = ""; localStorage.removeItem("yt-access-token"); resultEl.innerHTML = `<div class="msg msg-error">Session expired. Please sign in again.</div>`; btn.textContent = "🎵 Sign in & Save to YouTube Music"; btn.disabled = false; return; }
+      if (playlist.error.code === 401) {
+        state.accessToken = "";
+        localStorage.removeItem("yt-access-token");
+        if (resultEl) resultEl.innerHTML = '<div class="msg msg-error">Session expired. Please sign in again.</div>';
+        if (btn) { btn.textContent = "🎵 Sign in & Save to YouTube Music"; btn.disabled = false; }
+        return;
+      }
       throw new Error(playlist.error.message);
     }
-    const playlistId = playlist.id;
-    let added = 0;
-    for (const song of state.songs) {
+
+    var playlistId = playlist.id;
+    var added = 0;
+    for (var i = 0; i < state.songs.length; i++) {
       try {
-        const sr = await fetch("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + encodeURIComponent(song) + "&type=video&videoCategoryId=10&maxResults=1", { headers: { "Authorization": "Bearer " + state.accessToken } });
-        const sd = await sr.json();
-        const videoId = sd.items?.[0]?.id?.videoId;
+        var sr = await fetch("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + encodeURIComponent(state.songs[i]) + "&type=video&videoCategoryId=10&maxResults=1",
+          { headers: { "Authorization": "Bearer " + state.accessToken } });
+        var sd = await sr.json();
+        var videoId = sd.items && sd.items[0] && sd.items[0].id && sd.items[0].id.videoId;
         if (videoId) {
           await fetch("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet", {
             method: "POST",
             headers: { "Authorization": "Bearer " + state.accessToken, "Content-Type": "application/json" },
-            body: JSON.stringify({ snippet: { playlistId, resourceId: { kind: "youtube#video", videoId } } })
+            body: JSON.stringify({ snippet: { playlistId: playlistId, resourceId: { kind: "youtube#video", videoId: videoId } } })
           });
           added++;
         }
       } catch(e) {}
     }
+
     state.ytUrl = "https://music.youtube.com/playlist?list=" + playlistId;
-    resultEl.innerHTML = `<div class="msg msg-success">✓ Playlist created with ${added} songs!<br><a href="${state.ytUrl}" target="_blank" style="color:#2563eb;font-weight:700">▶ Open in YouTube Music</a></div>`;
-    const mailBtn = document.getElementById("mail-btn");
-    if (mailBtn) { 
-      mailBtn.style.opacity = "1";
-      mailBtn.title = "";
-      mailBtn.textContent = "📧 Send via Gmail";
-      mailBtn.onclick = function() { openMail(state.ytUrl); };
-    }
-    btn.textContent = "🎵 Save to YouTube Music";
-    btn.disabled = false;
+    if (resultEl) resultEl.innerHTML = '<div class="msg msg-success">✓ Playlist created with ' + added + ' songs!<br><a href="' + state.ytUrl + '" target="_blank" style="color:#2563eb;font-weight:700">▶ Open in YouTube Music</a></div>';
+    if (btn) { btn.textContent = "🎵 Save to YouTube Music"; btn.disabled = false; }
+
   } catch(e) {
-    resultEl.innerHTML = `<div class="msg msg-error">Error: ${e.message}</div>`;
-    btn.textContent = "🎵 Save to YouTube Music";
-    btn.disabled = false;
+    if (resultEl) resultEl.innerHTML = '<div class="msg msg-error">Error: ' + e.message + '</div>';
+    if (btn) { btn.textContent = "🎵 Save to YouTube Music"; btn.disabled = false; }
   }
 }
 
@@ -580,9 +531,6 @@ renderBlocklist();
 renderSetup();
 renderRate();
 setScreen("generate");
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
