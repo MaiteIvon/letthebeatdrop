@@ -369,7 +369,7 @@ async function generate() {
     + "\nMood/theme: " + mood
     + (picked.length ? "\nAlready in playlist (do NOT repeat): " + picked.join(", ") : "")
     + "\n\nSuggest " + (20 - picked.length) + " fresh varied songs. Dig deeper than obvious choices."
-    + "\n\nRespond ONLY with a JSON array: [\"Song - Artist\", ...]. No markdown.";
+    + "\n\nRespond with a plain numbered list only:\n1. Song Title - Artist\n2. Song Title - Artist\nNo JSON, no brackets, no extra text.";
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
