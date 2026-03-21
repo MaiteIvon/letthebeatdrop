@@ -3,73 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Let the Beat DROP 🎤</title>
+<title>Let the Beat DROP 💀</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #fdf6ec 0%, #fce7f3 100%); min-height: 100vh; padding: 16px; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d0d0d; min-height: 100vh; padding: 16px; }
 .app { max-width: 520px; margin: 0 auto; }
-.header { text-align: center; margin-bottom: 16px; }
-.header h1 { font-size: 24px; font-weight: 900; color: #1f2937; font-family: Georgia, serif; }
-.header p { font-size: 13px; color: #6b7280; margin-top: 4px; }
+.header { text-align: center; margin-bottom: 20px; padding-top: 16px; }
+.header h1 { font-size: 26px; font-weight: 900; color: #ff2d78; font-family: Georgia, serif; letter-spacing: 2px; text-transform: uppercase; }
+.header p { font-size: 12px; color: #666; margin-top: 6px; letter-spacing: 2px; text-transform: uppercase; }
 .nav { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.nav button { padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; border: 2px solid #f9a8d4; background: white; color: #6b7280; cursor: pointer; }
-.nav button.active { background: linear-gradient(90deg, #f59e0b, #ec4899); color: white; border-color: transparent; }
+.nav button { padding: 5px 14px; border-radius: 9999px; font-size: 11px; font-weight: 700; border: 2px solid #ff2d78; background: transparent; color: #ff2d78; cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase; }
+.nav button.active { background: #ff2d78; color: #0d0d0d; }
 .screen { display: none; }
 .screen.active { display: block; }
-.card { background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); padding: 20px; border: 2px solid #fde68a; margin-bottom: 16px; }
-.card h2 { font-size: 18px; font-weight: 900; color: #1f2937; margin-bottom: 8px; }
-label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 4px; margin-top: 12px; }
-input, textarea { width: 100%; border: 2px solid #fde68a; border-radius: 12px; padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit; }
-input:focus, textarea:focus { border-color: #ec4899; }
-.btn { display: block; width: 100%; padding: 12px; border-radius: 12px; font-weight: 900; font-size: 14px; color: white; border: none; cursor: pointer; margin-top: 12px; text-align: center; }
-.btn-main { background: linear-gradient(90deg, #f59e0b, #ec4899); }
-.btn-yt { background: linear-gradient(90deg, #ff0000, #cc0000); }
-.btn-gmail { background: linear-gradient(90deg, #6366f1, #ec4899); }
-.btn-green { background: #22c55e; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.card { background: #1a1a1a; border-radius: 12px; padding: 20px; border: 1px solid #2a2a2a; margin-bottom: 16px; }
+.card h2 { font-size: 16px; font-weight: 900; color: #ff2d78; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+label { display: block; font-size: 11px; font-weight: 700; color: #666; margin-bottom: 4px; margin-top: 12px; text-transform: uppercase; letter-spacing: 1px; }
+input, textarea { width: 100%; background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 8px; padding: 8px 12px; font-size: 13px; outline: none; font-family: inherit; color: #fff; }
+input:focus, textarea:focus { border-color: #ff2d78; }
+input::placeholder, textarea::placeholder { color: #444; }
+.btn { display: block; width: 100%; padding: 13px; border-radius: 8px; font-weight: 900; font-size: 13px; color: #0d0d0d; border: none; cursor: pointer; margin-top: 12px; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+.btn-main { background: #ff2d78; }
+.btn-yt { background: #ff2d78; color: #0d0d0d; }
+.btn-gmail { background: transparent; border: 1px solid #ff2d78; color: #ff2d78; }
+.btn-green { background: #00cc55; color: #0d0d0d; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
 .btn-row { display: flex; gap: 8px; margin-top: 12px; }
 .btn-row .btn { margin-top: 0; }
-.msg { border-radius: 12px; padding: 10px 12px; font-size: 12px; margin-top: 8px; }
-.msg-info { background: #fdf3ff; border: 2px solid #f0abfc; color: #a21caf; font-weight: 700; }
-.msg-success { background: #f0fdf4; border: 2px solid #86efac; color: #15803d; }
-.msg-error { background: #fef2f2; border: 2px solid #fca5a5; color: #dc2626; }
-.playlist-card { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #fde68a; margin-top: 16px; }
-.pl-header { padding: 20px; text-align: center; background: linear-gradient(90deg, #f59e0b, #ec4899); }
-.pl-header h2 { color: white; font-weight: 900; font-size: 20px; font-family: Georgia, serif; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
-.pl-header p { color: #fef9c3; font-size: 13px; margin-top: 4px; }
-.pl-body { background: linear-gradient(135deg, #fff9e6 0%, #fff0f5 100%); padding: 16px; }
+.msg { border-radius: 8px; padding: 10px 12px; font-size: 12px; margin-top: 8px; }
+.msg-success { background: #0a1a0f; border: 1px solid #00cc55; color: #44ff88; }
+.msg-error { background: #1a0a0a; border: 1px solid #cc2200; color: #ff6644; }
+.msg-info { background: #1a0a12; border: 1px solid #ff2d78; color: #ff8ab0; font-weight: 700; }
+.playlist-card { border-radius: 12px; overflow: hidden; border: 2px solid #ff2d78; margin-top: 16px; }
+.pl-header { padding: 24px 20px; text-align: center; background: #ff2d78; }
+.pl-header h2 { color: #0d0d0d; font-weight: 900; font-size: 20px; font-family: Georgia, serif; text-transform: uppercase; letter-spacing: 3px; }
+.pl-header p { color: #0d0d0d; font-size: 11px; margin-top: 4px; letter-spacing: 2px; opacity: 0.7; text-transform: uppercase; }
+.pl-body { background: #0d0d0d; padding: 16px; }
 .vibe { text-align: center; margin-bottom: 12px; }
-.vibe span { background: #ec4899; color: white; font-size: 13px; font-weight: 700; padding: 4px 16px; border-radius: 9999px; }
-.note-box { padding: 10px; border-radius: 12px; border: 2px dashed #f9a8d4; background: #fff0f8; text-align: center; font-style: italic; font-size: 13px; color: #6b7280; margin-bottom: 12px; }
-.song-list-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; margin-bottom: 8px; }
-.song-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
-.song-item:nth-child(odd) { background: #fff9e6; }
-.song-item:nth-child(even) { background: #fff0f8; }
-.song-num { font-weight: 900; font-size: 16px; min-width: 24px; }
-.song-link { color: #2563eb; text-decoration: none; font-weight: 600; font-size: 13px; }
-.song-link:hover { text-decoration: underline; }
-.anchor-badge { font-size: 11px; color: #f472b6; font-weight: 700; margin-left: 6px; }
-.hearts { text-align: center; padding: 12px; color: #f472b6; font-size: 18px; }
+.vibe span { background: transparent; color: #ff2d78; font-size: 11px; font-weight: 700; padding: 5px 16px; border-radius: 9999px; border: 1px solid #ff2d78; letter-spacing: 1px; text-transform: uppercase; }
+.note-box { padding: 10px; border-radius: 8px; border: 1px dashed #ff2d78; background: #1a0a12; text-align: center; font-style: italic; font-size: 13px; color: #ff8ab0; margin-bottom: 12px; }
+.song-list-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; color: #ff2d78; margin-bottom: 8px; text-align: center; }
+.song-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px; border-radius: 6px; margin-bottom: 3px; }
+.song-item:nth-child(odd) { background: #1a1a1a; }
+.song-item:nth-child(even) { background: #141414; }
+.song-num { font-weight: 900; font-size: 14px; min-width: 24px; color: #ff2d78; }
+.song-link { color: #eee; text-decoration: none; font-weight: 400; font-size: 13px; }
+.song-link:hover { color: #ff2d78; }
+.anchor-badge { font-size: 10px; color: #ff2d78; font-weight: 700; margin-left: 6px; }
+.hearts { text-align: center; padding: 14px; color: #ff2d78; font-size: 14px; letter-spacing: 6px; }
 .pl-actions { display: flex; flex-direction: column; gap: 8px; padding-bottom: 8px; }
-.blocklist-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
-.blocklist-item:nth-child(odd) { background: #fff9e6; }
-.blocklist-item:nth-child(even) { background: #fff0f8; }
-.unblock-btn { font-size: 11px; color: #f87171; font-weight: 700; background: none; border: none; cursor: pointer; }
-.rate-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 8px; margin-bottom: 4px; }
-.rate-item:nth-child(odd) { background: #fff9e6; }
-.rate-item:nth-child(even) { background: #fff0f8; }
+.blocklist-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 6px; margin-bottom: 3px; }
+.blocklist-item:nth-child(odd) { background: #1a1a1a; }
+.blocklist-item:nth-child(even) { background: #141414; }
+.unblock-btn { font-size: 11px; color: #ff2d78; font-weight: 700; background: none; border: none; cursor: pointer; }
+.rate-item { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-radius: 6px; margin-bottom: 3px; }
+.rate-item:nth-child(odd) { background: #1a1a1a; }
+.rate-item:nth-child(even) { background: #141414; }
 .rate-btns { display: flex; gap: 4px; }
-.rate-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #e5e7eb; background: white; cursor: pointer; font-size: 14px; }
-.rate-btn.selected { border-color: #ec4899; background: #fce7f3; }
-.hint { background: #fffbeb; border: 2px solid #fde68a; border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 12px; color: #92400e; line-height: 1.8; }
+.rate-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #333; background: #0d0d0d; cursor: pointer; font-size: 14px; }
+.rate-btn.selected { border-color: #ff2d78; background: #1a0a12; }
+.hint { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 12px; color: #666; line-height: 1.8; }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
-    <div style="font-size:40px;margin-bottom:8px">🎸</div>
-    <h1>Let the Beat DROP 🎤</h1>
-    <p>A little love note in music form 💕</p>
+    <svg width="100" height="88" viewBox="0 0 90 80" style="display:block;margin:0 auto 10px">
+      <g transform="translate(45,42)">
+        <path d="M0,-18 C-8,-22 -22,-20 -38,-8 C-28,-10 -20,-8 -14,-4 C-22,-6 -32,-2 -40,8 C-28,4 -18,4 -10,8 C-18,6 -24,12 -26,20 C-18,14 -10,12 -4,14 Z" fill="#cc0055"/>
+        <path d="M0,-18 C8,-22 22,-20 38,-8 C28,-10 20,-8 14,-4 C22,-6 32,-2 40,8 C28,4 18,4 10,8 C18,6 24,12 26,20 C18,14 10,12 4,14 Z" fill="#cc0055"/>
+        <path d="M0,28 C-4,24 -20,12 -20,-2 C-20,-14 -10,-18 0,-12 C10,-18 20,-14 20,-2 C20,12 4,24 0,28 Z" fill="#ff2d78"/>
+        <ellipse cx="0" cy="-2" rx="10" ry="11" fill="#f0f0f0"/>
+        <rect x="-7" y="6" width="14" height="6" rx="2" fill="#f0f0f0"/>
+        <ellipse cx="-3.5" cy="-3" rx="3" ry="3.5" fill="#0d0d0d"/>
+        <ellipse cx="3.5" cy="-3" rx="3" ry="3.5" fill="#0d0d0d"/>
+        <path d="M-1.5,2 L0,4 L1.5,2" fill="none" stroke="#0d0d0d" stroke-width="1"/>
+        <line x1="-4" y1="7" x2="-4" y2="11" stroke="#0d0d0d" stroke-width="1.5"/>
+        <line x1="-1.5" y1="7" x2="-1.5" y2="12" stroke="#0d0d0d" stroke-width="1.5"/>
+        <line x1="1.5" y1="7" x2="1.5" y2="12" stroke="#0d0d0d" stroke-width="1.5"/>
+        <line x1="4" y1="7" x2="4" y2="11" stroke="#0d0d0d" stroke-width="1.5"/>
+      </g>
+    </svg>
+    <h1>Let the Beat DROP</h1>
+    <p>♦ a love note in music form ♦</p>
   </div>
   <div class="nav" id="nav"></div>
   <div id="screen-generate" class="screen"></div>
@@ -91,18 +107,10 @@ const DEFAULT_OVERPLAYED = ["Homeward Bound","Take It Easy","Take Me Home Countr
 
 let state = {
   screen: "generate",
-  profile: null,
-  ratings: {},
-  lastPlaylist: [],
-  blocklist: null,
-  clientId: "",
-  apiKey: "",
-  accessToken: "",
-  songs: [],
-  ytUrl: ""
+  profile: null, ratings: {}, lastPlaylist: [], blocklist: null,
+  clientId: "", apiKey: "", accessToken: "", songs: [], ytUrl: ""
 };
 
-// Load from localStorage
 try { state.profile = JSON.parse(localStorage.getItem("jon-profile")) || DEFAULT_PROFILE; } catch(e) { state.profile = DEFAULT_PROFILE; }
 try { state.ratings = JSON.parse(localStorage.getItem("jon-ratings")) || {}; } catch(e) { state.ratings = {}; }
 try { state.lastPlaylist = JSON.parse(localStorage.getItem("last-playlist")) || []; } catch(e) { state.lastPlaylist = []; }
@@ -111,7 +119,6 @@ state.clientId = localStorage.getItem("yt-client-id") || "";
 state.apiKey = localStorage.getItem("anthropic-key") || "";
 state.accessToken = localStorage.getItem("yt-access-token") || "";
 
-// Check for OAuth token in URL
 (function() {
   var h = window.location.hash;
   if (h && h.includes("access_token")) {
@@ -134,14 +141,11 @@ state.accessToken = localStorage.getItem("yt-access-token") || "";
 })();
 
 function save(key, val) {
-  try {
-    localStorage.setItem(key, typeof val === "object" ? JSON.stringify(val) : val);
-  } catch(e) {}
+  try { localStorage.setItem(key, typeof val === "object" ? JSON.stringify(val) : val); } catch(e) {}
 }
 
 function setScreen(s) {
-  state.screen = s;
-  renderNav();
+  state.screen = s; renderNav();
   document.querySelectorAll(".screen").forEach(function(el) { el.classList.remove("active"); });
   document.getElementById("screen-" + s).classList.add("active");
 }
@@ -162,30 +166,22 @@ function renderNav() {
 function renderSetup() {
   document.getElementById("screen-setup").innerHTML =
     '<div class="card"><h2>⚙️ Setup</h2>' +
-    (state.accessToken ? '<div class="msg msg-success">✓ Signed in to YouTube Music! <button onclick="signOutYT()" style="margin-left:8px;background:none;border:none;color:#dc2626;font-weight:700;cursor:pointer">Sign out</button></div>' : '') +
-    '<label>Anthropic API Key</label>' +
-    '<input type="password" id="inp-apikey" placeholder="sk-ant-..." value="' + state.apiKey + '">' +
-    '<label>Google OAuth Client ID</label>' +
-    '<input type="password" id="inp-clientid" placeholder="Ends in .googleusercontent.com" value="' + state.clientId + '">' +
+    (state.accessToken ? '<div class="msg msg-success">✓ Signed in to YouTube Music! <button onclick="signOutYT()" style="margin-left:8px;background:none;border:none;color:#ff2d78;font-weight:700;cursor:pointer">Sign out</button></div>' : '') +
+    '<label>Anthropic API Key</label><input type="password" id="inp-apikey" placeholder="sk-ant-..." value="' + state.apiKey + '">' +
+    '<label>Google OAuth Client ID</label><input type="password" id="inp-clientid" placeholder="Ends in .googleusercontent.com" value="' + state.clientId + '">' +
     '<button class="btn btn-main" onclick="saveSetup()">💾 Save</button>' +
-    '<div class="hint">Get your Anthropic API Key from console.anthropic.com under API Keys.<br>Get your Google Client ID from Google Cloud Console under Credentials.</div>' +
-    '</div>';
+    '<div class="hint">Anthropic API Key: console.anthropic.com → API Keys<br>Google Client ID: Google Cloud Console → Credentials</div></div>';
 }
 
 function saveSetup() {
   state.apiKey = document.getElementById("inp-apikey").value.trim();
   state.clientId = document.getElementById("inp-clientid").value.trim();
-  save("anthropic-key", state.apiKey);
-  save("yt-client-id", state.clientId);
-  renderNav();
-  renderSetup();
-  alert("Saved!");
+  save("anthropic-key", state.apiKey); save("yt-client-id", state.clientId);
+  renderNav(); renderSetup(); alert("Saved!");
 }
 
 function signOutYT() {
-  state.accessToken = "";
-  localStorage.removeItem("yt-access-token");
-  renderSetup();
+  state.accessToken = ""; localStorage.removeItem("yt-access-token"); renderSetup();
 }
 
 function renderProfile() {
@@ -205,48 +201,41 @@ function saveProfile() {
     dislikes: document.getElementById("p-dislikes").value,
     notes: document.getElementById("p-notes").value
   };
-  save("jon-profile", state.profile);
-  alert("Saved!");
+  save("jon-profile", state.profile); alert("Saved!");
 }
 
 function renderBlocklist() {
   var items = state.blocklist.map(function(s, i) {
-    return '<div class="blocklist-item"><span style="font-size:13px;color:#374151">' + s + '</span><button class="unblock-btn" onclick="unblock(' + i + ')">✕ Unblock</button></div>';
+    return '<div class="blocklist-item"><span style="font-size:13px;color:#ccc">' + s + '</span><button class="unblock-btn" onclick="unblock(' + i + ')">✕ Unblock</button></div>';
   }).join("");
   document.getElementById("screen-blocklist").innerHTML =
     '<div class="card"><h2>🚫 Blocked Songs</h2>' +
-    '<p style="font-size:12px;color:#6b7280;margin-bottom:8px">All generated songs auto-added here. Unblock when ready!</p>' +
+    '<p style="font-size:12px;color:#666;margin-bottom:8px">All generated songs auto-added. Unblock when ready!</p>' +
     '<div style="display:flex;gap:8px"><input id="bl-input" placeholder="Add a song title..." style="flex:1" onkeydown="if(event.key===\'Enter\')addBlock()"><button class="btn btn-main" onclick="addBlock()" style="width:auto;padding:8px 16px;margin-top:0">Add</button></div>' +
-    '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#6b7280">BLOCKED (' + state.blocklist.length + ')</span>' +
-    (state.blocklist.length > 0 ? '<button onclick="clearBlocklist()" style="font-size:11px;color:#f87171;font-weight:700;background:none;border:none;cursor:pointer">🗑 Clear All</button>' : '') +
-    '</div>' + (state.blocklist.length === 0 ? '<p style="font-size:12px;color:#9ca3af;font-style:italic">No songs blocked yet.</p>' : items) + '</div></div>';
+    '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+    '<span style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1px">Blocked (' + state.blocklist.length + ')</span>' +
+    (state.blocklist.length > 0 ? '<button onclick="clearBlocklist()" style="font-size:11px;color:#ff2d78;font-weight:700;background:none;border:none;cursor:pointer">🗑 Clear All</button>' : '') +
+    '</div>' + (state.blocklist.length === 0 ? '<p style="font-size:12px;color:#444;font-style:italic">No songs blocked yet.</p>' : items) + '</div></div>';
 }
 
 function addBlock() {
   var val = document.getElementById("bl-input").value.trim();
   if (!val) return;
   state.blocklist = Array.from(new Set(state.blocklist.concat([val])));
-  save("blocklist", state.blocklist);
-  renderBlocklist();
+  save("blocklist", state.blocklist); renderBlocklist();
 }
 
 function unblock(i) {
-  state.blocklist.splice(i, 1);
-  save("blocklist", state.blocklist);
-  renderBlocklist();
+  state.blocklist.splice(i, 1); save("blocklist", state.blocklist); renderBlocklist();
 }
 
 function clearBlocklist() {
-  if (confirm("Clear all blocked songs?")) {
-    state.blocklist = [];
-    save("blocklist", state.blocklist);
-    renderBlocklist();
-  }
+  if (confirm("Clear all blocked songs?")) { state.blocklist = []; save("blocklist", state.blocklist); renderBlocklist(); }
 }
 
 function renderRate() {
   if (!state.lastPlaylist.length) {
-    document.getElementById("screen-rate").innerHTML = '<div class="card"><p style="text-align:center;color:#6b7280">Generate a playlist first!</p></div>';
+    document.getElementById("screen-rate").innerHTML = '<div class="card"><p style="text-align:center;color:#666">Generate a playlist first!</p></div>';
     return;
   }
   var items = state.lastPlaylist.map(function(song, i) {
@@ -254,36 +243,29 @@ function renderRate() {
     var btns = [["❤️","loved"],["👍","liked"],["👎","skip"]].map(function(x) {
       return '<button class="rate-btn ' + (r===x[1]?'selected':'') + '" onclick="rateSong(' + i + ',\'' + x[1] + '\')">' + x[0] + '</button>';
     }).join("");
-    return '<div class="rate-item"><span style="font-size:12px;color:#374151;flex:1;margin-right:8px">' + song + '</span><div class="rate-btns">' + btns + '</div></div>';
+    return '<div class="rate-item"><span style="font-size:12px;color:#ccc;flex:1;margin-right:8px">' + song + '</span><div class="rate-btns">' + btns + '</div></div>';
   }).join("");
   document.getElementById("screen-rate").innerHTML =
-    '<div class="card"><h2>📊 Rate Last Playlist</h2><p style="font-size:12px;color:#6b7280;margin-bottom:12px">How did Jon react?</p>' + items +
+    '<div class="card"><h2>📊 Rate Last Playlist</h2><p style="font-size:12px;color:#666;margin-bottom:12px">How did Jon react?</p>' + items +
     '<button class="btn btn-main" onclick="saveRatings()">💾 Save Ratings</button></div>';
 }
 
-function rateSong(i, val) {
-  state.ratings[state.lastPlaylist[i]] = val;
-  renderRate();
-}
-
-function saveRatings() {
-  save("jon-ratings", state.ratings);
-  alert("Ratings saved!");
-}
+function rateSong(i, val) { state.ratings[state.lastPlaylist[i]] = val; renderRate(); }
+function saveRatings() { save("jon-ratings", state.ratings); alert("Ratings saved!"); }
 
 function renderGenerate() {
   document.getElementById("screen-generate").innerHTML =
     '<div class="card">' +
     '<label>🎨 Today\'s Mood or Theme *</label>' +
-    '<input id="g-mood" placeholder="e.g. Rainy day cozy, Pump-up Friday, Thinking of you...">' +
+    '<input id="g-mood" placeholder="e.g. Riding into battle, Sunday easy, Thinking of you...">' +
     '<label>💌 A little note for Jon (optional)</label>' +
     '<input id="g-note" placeholder="e.g. Thinking of you today ♥">' +
     '<label>🎵 Your Picks (optional — up to 3)</label>' +
-    '<input id="g-a1" placeholder="Song 1 — e.g. Free Bird by Lynyrd Skynyrd" style="margin-bottom:6px">' +
+    '<input id="g-a1" placeholder="Song 1" style="margin-bottom:6px">' +
     '<input id="g-a2" placeholder="Song 2" style="margin-bottom:6px">' +
     '<input id="g-a3" placeholder="Song 3">' +
     '<div id="g-error" class="msg msg-error" style="display:none"></div>' +
-    '<button class="btn btn-main" id="g-btn" onclick="generate()">🎶 Generate Playlist</button>' +
+    '<button class="btn btn-main" id="g-btn" onclick="generate()">💀 Generate Playlist</button>' +
     '</div><div id="playlist-result"></div>';
 }
 
@@ -317,7 +299,6 @@ function hardFilter(songList, recentTitles) {
 }
 
 function parseSongList(text) {
-  // Parse numbered list: "1. Song by Artist" or "1. Song - Artist"
   var lines = text.split("\n");
   var songs = [];
   lines.forEach(function(line) {
@@ -338,7 +319,7 @@ async function generate() {
   errEl.style.display = "none";
 
   var btn = document.getElementById("g-btn");
-  btn.textContent = "✨ Building your playlist...";
+  btn.textContent = "💀 Executing playlist...";
   btn.disabled = true;
 
   var recent = getRecentSongs();
@@ -351,15 +332,12 @@ async function generate() {
     "He dislikes: " + state.profile.dislikes + "\n\n" +
     "Notes: " + state.profile.notes + "\n\n" +
     (loved.length ? "Songs he loved recently: " + loved.slice(-10).join(", ") + "\n\n" : "") +
-    (skipped.length ? "Songs to avoid (he skipped these): " + skipped.slice(-10).join(", ") + "\n\n" : "") +
+    (skipped.length ? "Songs to avoid: " + skipped.slice(-10).join(", ") + "\n\n" : "") +
     "Never suggest these songs: " + allBlocked.join(", ") + "\n\n" +
     "Today's mood/theme: " + mood + "\n" +
-    (picked.length ? "Already chosen songs (do not repeat): " + picked.join(", ") + "\n" : "") +
+    (picked.length ? "Already chosen (do not repeat): " + picked.join(", ") + "\n" : "") +
     "\nSuggest " + (20 - picked.length) + " songs. Be creative and varied.\n\n" +
-    "IMPORTANT: Reply with ONLY a simple numbered list. Each line must start with a number and period. Use this exact format:\n" +
-    "1. Song Name by Artist Name\n" +
-    "2. Song Name by Artist Name\n" +
-    "Do not include any other text, explanation, or formatting.";
+    "IMPORTANT: Reply with ONLY a simple numbered list. Format:\n1. Song Name by Artist Name\n2. Song Name by Artist Name\nNo other text.";
 
   try {
     var res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -373,7 +351,7 @@ async function generate() {
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
         max_tokens: 1500,
-        system: "You are a music playlist generator. You ONLY output numbered lists of songs. Never use JSON. Never use brackets. Format: 1. Song Name by Artist Name",
+        system: "You are a music playlist generator. Output ONLY a numbered list. Format: 1. Song Name by Artist Name. Never use JSON, brackets, or any other formatting.",
         messages: [{ role: "user", content: prompt }]
       })
     });
@@ -401,15 +379,15 @@ async function generate() {
     errEl.style.display = "block";
   }
 
-  btn.textContent = "🎶 Generate Playlist";
+  btn.textContent = "💀 Generate Playlist";
   btn.disabled = false;
 }
 
 function renderPlaylistCard(mood, note, pickedCount) {
-  var today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
+  var today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"}).toUpperCase();
   var songItems = state.songs.map(function(song, i) {
     return '<div class="song-item">' +
-      '<span class="song-num" style="color:' + (i < pickedCount ? '#ec4899' : '#f59e0b') + '">' + (i+1) + '.</span>' +
+      '<span class="song-num">' + (i+1) + '.</span>' +
       '<span><a class="song-link" href="https://music.youtube.com/search?q=' + encodeURIComponent(song) + '" target="_blank">' + song + '</a>' +
       (i < pickedCount ? '<span class="anchor-badge">★ your pick</span>' : '') +
       '</span></div>';
@@ -422,18 +400,31 @@ function renderPlaylistCard(mood, note, pickedCount) {
 
   document.getElementById("playlist-result").innerHTML =
     '<div class="playlist-card">' +
-    '<div class="pl-header"><div style="font-size:32px;margin-bottom:4px">🎵</div><h2>Let the Beat DROP 🎤</h2><p>' + today + '</p></div>' +
+    '<div class="pl-header">' +
+    '<svg width="50" height="44" viewBox="0 0 90 80" style="display:block;margin:0 auto 6px">' +
+    '<g transform="translate(45,42)">' +
+    '<path d="M0,-18 C-8,-22 -22,-20 -38,-8 C-28,-10 -20,-8 -14,-4 C-22,-6 -32,-2 -40,8 C-28,4 -18,4 -10,8 C-18,6 -24,12 -26,20 C-18,14 -10,12 -4,14 Z" fill="#a00040"/>' +
+    '<path d="M0,-18 C8,-22 22,-20 38,-8 C28,-10 20,-8 14,-4 C22,-6 32,-2 40,8 C28,4 18,4 10,8 C18,6 24,12 26,20 C18,14 10,12 4,14 Z" fill="#a00040"/>' +
+    '<path d="M0,28 C-4,24 -20,12 -20,-2 C-20,-14 -10,-18 0,-12 C10,-18 20,-14 20,-2 C20,12 4,24 0,28 Z" fill="#0d0d0d"/>' +
+    '<ellipse cx="0" cy="-2" rx="10" ry="11" fill="#f0f0f0"/>' +
+    '<rect x="-7" y="6" width="14" height="6" rx="2" fill="#f0f0f0"/>' +
+    '<ellipse cx="-3.5" cy="-3" rx="3" ry="3.5" fill="#0d0d0d"/>' +
+    '<ellipse cx="3.5" cy="-3" rx="3" ry="3.5" fill="#0d0d0d"/>' +
+    '<line x1="-4" y1="7" x2="-4" y2="11" stroke="#0d0d0d" stroke-width="1.5"/>' +
+    '<line x1="-1.5" y1="7" x2="-1.5" y2="12" stroke="#0d0d0d" stroke-width="1.5"/>' +
+    '<line x1="1.5" y1="7" x2="1.5" y2="12" stroke="#0d0d0d" stroke-width="1.5"/>' +
+    '<line x1="4" y1="7" x2="4" y2="11" stroke="#0d0d0d" stroke-width="1.5"/>' +
+    '</g></svg>' +
+    '<h2>Let the Beat DROP</h2><p>' + today + '</p></div>' +
     '<div class="pl-body">' +
-    '<div class="vibe"><span>🎨 Today\'s Vibe: ' + mood + '</span></div>' +
+    '<div class="vibe"><span>⚡ ' + mood + '</span></div>' +
     (note ? '<div class="note-box">💌 "' + note + '"</div>' : '') +
-    '<div class="song-list-label">🎶 Your Playlist</div>' +
+    '<div class="song-list-label">♦ Your Playlist ♦</div>' +
     songItems +
-    '<div class="hearts">♥ ♪ ♥ ♪ ♥</div>' +
-    '<div class="pl-actions">' +
-    ytBtns +
-    '<div class="btn-row">' +
-    '<button class="btn btn-gmail" id="mail-btn" onclick="openMail()">📧 Send via Gmail</button>' +
-    '</div></div></div></div>';
+    '<div class="hearts">♦ ♥ ♦ ♥ ♦</div>' +
+    '<div class="pl-actions">' + ytBtns +
+    '<div class="btn-row"><button class="btn btn-gmail" id="mail-btn" onclick="openMail()">📧 Send via Gmail</button></div>' +
+    '</div></div></div>';
 }
 
 function openMail() {
@@ -441,16 +432,14 @@ function openMail() {
   var subject = encodeURIComponent("🎵 Let the Beat DROP — " + today);
   var noteEl = document.getElementById("g-note");
   var note = noteEl ? noteEl.value.trim() : "";
-  var ytUrl = state.ytUrl || "";
   var body = (note ? note + "\n\n" : "") +
-    (ytUrl ? "▶ Today's Playlist:\n" + ytUrl : "Save to YouTube Music first to include the playlist link!") +
-    "\n\n♥ ♪ ♥ ♪ ♥";
+    (state.ytUrl ? "▶ Today's Playlist:\n" + state.ytUrl : "Save to YouTube Music first to include the playlist link!") +
+    "\n\n♦ ♥ ♦ ♥ ♦";
   window.open("https://mail.google.com/mail/?view=cm&su=" + subject + "&body=" + encodeURIComponent(body), "_blank");
 }
 
 function handleYouTube() {
   if (!state.accessToken) { signInToYouTube(); return; }
-  var btn = document.getElementById("yt-btn");
   var mood = document.getElementById("g-mood") ? document.getElementById("g-mood").value.trim() : "";
   var note = document.getElementById("g-note") ? document.getElementById("g-note").value.trim() : "";
   createYouTubePlaylist(mood, note);
@@ -470,8 +459,7 @@ function signInToYouTube() {
 async function createYouTubePlaylist(mood, note) {
   var btn = document.getElementById("yt-btn");
   var resultEl = document.getElementById("yt-result");
-  if (btn) { btn.textContent = "⏳ Creating playlist..."; btn.disabled = true; }
-
+  if (btn) { btn.textContent = "⏳ Executing..."; btn.disabled = true; }
   var today = new Date().toLocaleDateString("en-US", {weekday:"long",month:"long",day:"numeric"});
   try {
     var createRes = await fetch("https://www.googleapis.com/youtube/v3/playlists?part=snippet,status", {
@@ -485,15 +473,13 @@ async function createYouTubePlaylist(mood, note) {
     var playlist = await createRes.json();
     if (playlist.error) {
       if (playlist.error.code === 401) {
-        state.accessToken = "";
-        localStorage.removeItem("yt-access-token");
-        if (resultEl) resultEl.innerHTML = '<div class="msg msg-error">Session expired. Please sign in again.</div>';
+        state.accessToken = ""; localStorage.removeItem("yt-access-token");
+        if (resultEl) resultEl.innerHTML = '<div class="msg msg-error">Session expired. Sign in again.</div>';
         if (btn) { btn.textContent = "🎵 Sign in & Save to YouTube Music"; btn.disabled = false; }
         return;
       }
       throw new Error(playlist.error.message);
     }
-
     var playlistId = playlist.id;
     var added = 0;
     for (var i = 0; i < state.songs.length; i++) {
@@ -512,24 +498,16 @@ async function createYouTubePlaylist(mood, note) {
         }
       } catch(e) {}
     }
-
     state.ytUrl = "https://music.youtube.com/playlist?list=" + playlistId;
-    if (resultEl) resultEl.innerHTML = '<div class="msg msg-success">✓ Playlist created with ' + added + ' songs!<br><a href="' + state.ytUrl + '" target="_blank" style="color:#2563eb;font-weight:700">▶ Open in YouTube Music</a></div>';
+    if (resultEl) resultEl.innerHTML = '<div class="msg msg-success">✓ ' + added + ' songs locked and loaded!<br><a href="' + state.ytUrl + '" target="_blank" style="color:#44ff88;font-weight:700">▶ Open in YouTube Music</a></div>';
     if (btn) { btn.textContent = "🎵 Save to YouTube Music"; btn.disabled = false; }
-
   } catch(e) {
     if (resultEl) resultEl.innerHTML = '<div class="msg msg-error">Error: ' + e.message + '</div>';
     if (btn) { btn.textContent = "🎵 Save to YouTube Music"; btn.disabled = false; }
   }
 }
 
-// Init
-renderNav();
-renderGenerate();
-renderProfile();
-renderBlocklist();
-renderSetup();
-renderRate();
+renderNav(); renderGenerate(); renderProfile(); renderBlocklist(); renderSetup(); renderRate();
 setScreen("generate");
 </script>
 </body>
